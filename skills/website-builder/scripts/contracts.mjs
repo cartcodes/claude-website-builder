@@ -25,8 +25,8 @@ export function loadContracts(root = 'contracts') {
   return { archives: read(path.join(root, 'archives')), success: read(path.join(root, 'success')) };
 }
 
-const NO_TODO = v => !/\bTODO\b/.test(typeof v === 'string' ? v : JSON.stringify(v));
-const TODO_MSG = 'Still says TODO. Fill in the real fact (never invent one) or remove the field if it is optional.';
+const noTodo = v => !/\bTODO\b/.test(typeof v === 'string' ? v : JSON.stringify(v));
+const todoMsg = 'Still says TODO. Fill in the real fact (never invent one) or remove the field if it is optional.';
 
 function fieldSchema(spec, z) {
   let s;
@@ -46,7 +46,7 @@ function fieldSchema(spec, z) {
     case 'testimonials': s = z.array(z.object({ name: z.string(), town: z.string().optional(), quote: z.string().min(10) })).min(spec.min ?? 0, `Needs at least ${spec.min} real testimonials.`); break;
     default: throw new Error(`Unknown field type "${spec.type}" in a contract.`);
   }
-  s = s.refine(NO_TODO, TODO_MSG);
+  s = s.refine(noTodo, todoMsg);
   return spec.optional || spec.requiredIf ? s.optional() : s;
 }
 

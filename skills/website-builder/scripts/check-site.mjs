@@ -1,6 +1,6 @@
 // check-site.mjs: one command that checks every built page for SEO, AI search
 // (GEO/AEO), page speed budget, site structure and copy quality.
-// Usage: node scripts/check-site.mjs [built-html-folder] [--site https://<your-domain>] [--freeform]
+// Usage: node scripts/check-site.mjs [built-html-folder] [--site <your site address>] [--freeform]
 // Works on the HTML output of any stack (dist, out, build, _site, public, or a folder
 // saved by fetch-site.mjs). --freeform turns layout conventions (footer archive links,
 // one goal per page, success pages, breadcrumbs) into suggestions instead of failures.
@@ -10,12 +10,12 @@ import fs from 'node:fs';
 import path from 'node:path';
 
 const args = process.argv.slice(2);
-const DIST = path.resolve(args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--site') || 'dist');
+const distDir = path.resolve(args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--site') || 'dist');
 const siteArg = args.includes('--site') ? args[args.indexOf('--site') + 1] : null;
-const FREEFORM = args.includes('--freeform');
+const freeform = args.includes('--freeform');
 
 // Budgets. Change them here if a page legitimately needs more.
-const BUDGET = {
+const budget = {
   titleMin: 25, titleMax: 65,
   descMin: 70, descMax: 160,
   htmlKB: 120,           // one page's HTML
@@ -28,11 +28,11 @@ const BUDGET = {
   answerMin: 15, answerMax: 90, // words in the first paragraph after a question heading
 };
 
-const AI_BOTS = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-User',
+const aiBots = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-User',
   'Claude-SearchBot', 'PerplexityBot', 'Perplexity-User', 'Google-Extended', 'Applebot-Extended',
   'Bingbot', 'CCBot'];
 
-const BANNED_WORDS = ['delve', 'tapestry', 'realm', 'embark', 'multifaceted', 'robust', 'leverage',
+const bannedWords = ['delve', 'tapestry', 'realm', 'embark', 'multifaceted', 'robust', 'leverage',
   'utilize', 'streamline', 'foster', 'enhance', 'elevate', 'pivotal', 'comprehensive',
   'groundbreaking', 'unprecedented', 'seamless', 'seamlessly', 'cutting-edge', 'innovative',
   'harness', 'underscore', 'facilitate', 'elucidate', 'holistic', 'paradigm', 'synergy',
@@ -40,7 +40,7 @@ const BANNED_WORDS = ['delve', 'tapestry', 'realm', 'embark', 'multifaceted', 'r
   'paramount', 'meticulous', 'meticulously', 'bespoke', 'cognizant', 'transformative',
   'commendable', 'noteworthy', 'game-changer', 'unlock', 'empower', 'elevated', 'nestled',
   'top-notch', 'second to none', 'one-stop shop', 'look no further'];
-const BANNED_PHRASES = [/in today'?s (fast-paced|digital|modern|ever)/i, /ever-evolving/i,
+const bannedPhrases = [/in today'?s (fast-paced|digital|modern|ever)/i, /ever-evolving/i,
   /it'?s (important|worth) (to note|noting)/i, /let'?s dive/i, /when it comes to/i,
   /in conclusion/i, /\bfurthermore\b/i, /\bmoreover\b/i, /whether you'?re an? .{1,40}, an? .{1,40},? or/i,
   /\bnot (just|only) [^.?!]{1,40}, but\b/i, /\bit'?s not [^.?!]{1,40}[,;] it'?s\b/i,
@@ -50,15 +50,15 @@ const results = []; // {level, page, msg}
 const fail = (page, msg) => results.push({ level: 'FAIL', page, msg });
 const warn = (page, msg) => results.push({ level: 'WARN', page, msg });
 // Layout conventions: must-fix in the interview build, suggestions in freeform.
-const conv = (page, msg) => (FREEFORM ? warn : fail)(page, msg);
+const conv = (page, msg) => (freeform ? warn : fail)(page, msg);
 
-if (!fs.existsSync(DIST)) { console.error(`No build folder at ${DIST}. Run the build first.`); process.exit(1); }
+if (!fs.existsSync(distDir)) { console.error(`No build folder at ${distDir}. Run the build first.`); process.exit(1); }
 
 const walk = d => fs.readdirSync(d, { withFileTypes: true }).flatMap(e =>
   e.isDirectory() ? walk(path.join(d, e.name)) : [path.join(d, e.name)]);
-const files = walk(DIST);
+const files = walk(distDir);
 const htmlFiles = files.filter(f => f.endsWith('.html'));
-const rel = f => '/' + path.relative(DIST, f).split(path.sep).join('/');
+const rel = f => '/' + path.relative(distDir, f).split(path.sep).join('/');
 const urlOf = f => rel(f).replace(/index\.html$/, '').replace(/\.html$/, '/');
 const read = f => fs.readFileSync(f, 'utf8');
 const kb = f => fs.statSync(f).size / 1024;
@@ -83,9 +83,9 @@ const mainText = h => stripTags((h.match(/<main[\s\S]*?<\/main>/i) || [h])[0]);
 // archive = a top-level folder page that has landing pages under it
 // landing = every page under an archive (one conversion goal each)
 // info    = about, contact, legal, thank-you pages
-const INFO = /^\/(about|contact|privacy|terms|legal|reviews|thank-you|thanks|confirm)(\/|$)/;
+const info = /^\/(about|contact|privacy|terms|legal|reviews|thank-you|thanks|confirm)(\/|$)/;
 const pageType = u => u === '/' ? 'home'
-  : INFO.test(u) ? 'info'
+  : info.test(u) ? 'info'
   : /^\/[^/]+\/$/.test(u) && pages.some(q => q.url !== u && q.url.startsWith(u)) ? 'archive'
   : /^\/[^/]+\/.+/.test(u) ? 'landing' : 'other';
 
@@ -96,9 +96,9 @@ if (!sitemapFiles.length) fail('site', 'No sitemap.xml. Search engines and AI cr
 for (const f of sitemapFiles) for (const m of read(f).matchAll(/<loc>([^<]+)<\/loc>/g)) {
   try { sitemapUrls.add(new URL(m[1]).pathname); } catch {}
 }
-const SITE = siteArg || (() => { for (const f of sitemapFiles) { const m = read(f).match(/<loc>(https?:\/\/[^/<]+)/); if (m) return m[1]; } })();
+const site = siteArg || (() => { for (const f of sitemapFiles) { const m = read(f).match(/<loc>(https?:\/\/[^/<]+)/); if (m) return m[1]; } })();
 
-const robotsPath = path.join(DIST, 'robots.txt');
+const robotsPath = path.join(distDir, 'robots.txt');
 if (!fs.existsSync(robotsPath)) fail('site', 'No robots.txt.');
 else {
   const r = read(robotsPath);
@@ -109,12 +109,12 @@ else {
     const agents = [...g.matchAll(/^user-agent:\s*(.+)$/gim)].map(m => m[1].trim().toLowerCase());
     if (/^disallow:\s*\/\s*$/im.test(g)) {
       if (agents.includes('*')) fail('site', 'robots.txt blocks every crawler (Disallow: / for *).');
-      for (const b of AI_BOTS) if (agents.includes(b.toLowerCase())) fail('site', `robots.txt blocks ${b}. That hides the site from that AI assistant.`);
+      for (const b of aiBots) if (agents.includes(b.toLowerCase())) fail('site', `robots.txt blocks ${b}. That hides the site from that AI assistant.`);
     }
   }
 }
 
-const llmsPath = path.join(DIST, 'llms.txt');
+const llmsPath = path.join(distDir, 'llms.txt');
 let llmsText = '';
 if (!fs.existsSync(llmsPath)) fail('site', 'No llms.txt at the site root.');
 else {
@@ -123,14 +123,14 @@ else {
   if (!/^> .+/m.test(llmsText)) warn('site', 'llms.txt should have a one-line "> summary" under the title.');
   if (!/^## /m.test(llmsText)) warn('site', 'llms.txt should group links under "## " sections (one per archive).');
 }
-if (!fs.existsSync(path.join(DIST, '404.html'))) warn('site', 'No 404.html page.');
+if (!fs.existsSync(path.join(distDir, '404.html'))) warn('site', 'No 404.html page.');
 
 // ---------- per page ----------
 const pages = htmlFiles.filter(f => !/404\.html$/.test(f)).map(f => ({ f, url: urlOf(f), html: read(f) }));
 const inbound = new Map(pages.map(p => [p.url, 0]));
 const existing = new Set(pages.map(p => p.url));
-const archives = pages.map(p => p.url).filter(u => /^\/[^/]+\/$/.test(u) && !INFO.test(u) && pages.some(q => q.url !== u && q.url.startsWith(u)));
-const assetExists = u => fs.existsSync(path.join(DIST, decodeURIComponent(u.split(/[?#]/)[0])));
+const archives = pages.map(p => p.url).filter(u => /^\/[^/]+\/$/.test(u) && !info.test(u) && pages.some(q => q.url !== u && q.url.startsWith(u)));
+const assetExists = u => fs.existsSync(path.join(distDir, decodeURIComponent(u.split(/[?#]/)[0])));
 
 for (const p of pages) {
   const { html, url } = p; const type = pageType(url); p.type = type;
@@ -159,11 +159,11 @@ for (const p of pages) {
   // Basics
   const title = stripTags((html.match(/<title>([\s\S]*?)<\/title>/i) || [])[1] || '');
   if (!title) fail(url, 'Missing <title>.');
-  else if (title.length < BUDGET.titleMin || title.length > BUDGET.titleMax) warn(url, `Title is ${title.length} characters (aim ${BUDGET.titleMin}-${BUDGET.titleMax}): "${title}"`);
+  else if (title.length < budget.titleMin || title.length > budget.titleMax) warn(url, `Title is ${title.length} characters (aim ${budget.titleMin}-${budget.titleMax}): "${title}"`);
   p.title = title;
   const desc = metaContent(html, 'description');
   if (!desc) fail(url, 'Missing meta description.');
-  else if (desc.length < BUDGET.descMin || desc.length > BUDGET.descMax) warn(url, `Meta description is ${desc.length} characters (aim ${BUDGET.descMin}-${BUDGET.descMax}).`);
+  else if (desc.length < budget.descMin || desc.length > budget.descMax) warn(url, `Meta description is ${desc.length} characters (aim ${budget.descMin}-${budget.descMax}).`);
   p.desc = desc;
   if (!/<html[^>]+lang=/i.test(html)) fail(url, 'Missing <html lang="...">.');
   if (!/name=["']viewport["']/i.test(html)) fail(url, 'Missing mobile viewport tag.');
@@ -179,7 +179,7 @@ for (const p of pages) {
   }
   for (const k of ['og:title', 'og:description', 'og:image']) if (!metaContent(html, k)) warn(url, `Missing ${k} (controls how links look when shared).`);
   if (!sitemapUrls.has(url)) fail(url, 'Not listed in the sitemap.');
-  if (llmsText && type !== 'other' && !new RegExp(`(\\(|\\s)(${(SITE || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})?${url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\)|\\s|$)`, 'm').test(llmsText)) warn(url, 'Not listed in llms.txt.');
+  if (llmsText && type !== 'other' && !new RegExp(`(\\(|\\s)(${(site || '').replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})?${url.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}(\\)|\\s|$)`, 'm').test(llmsText)) warn(url, 'Not listed in llms.txt.');
 
   // Structured data
   const ld = [...html.matchAll(/<script[^>]+application\/ld\+json[^>]*>([\s\S]*?)<\/script>/gi)];
@@ -206,7 +206,7 @@ for (const p of pages) {
   // Answer-first: first paragraph after each question heading
   for (const m of html.matchAll(/<h([23])[^>]*>([^<]*\?)\s*<\/h\1>\s*(?:<[^p][^>]*>\s*)*<p[^>]*>([\s\S]*?)<\/p>/gi)) {
     const n = words(stripTags(m[3])).length;
-    if (n < BUDGET.answerMin || n > BUDGET.answerMax) warn(url, `Answer to "${stripTags(m[2])}" is ${n} words. Lead with a direct ${BUDGET.answerMin}-${BUDGET.answerMax} word answer AI tools can quote.`);
+    if (n < budget.answerMin || n > budget.answerMax) warn(url, `Answer to "${stripTags(m[2])}" is ${n} words. Lead with a direct ${budget.answerMin}-${budget.answerMax} word answer AI tools can quote.`);
   }
 
   // Images
@@ -214,28 +214,28 @@ for (const p of pages) {
     const t = m[0]; const src = attr(t, 'src') || '';
     if (attr(t, 'alt') === undefined) fail(url, `Image without alt text: ${src}`);
     if (!attr(t, 'width') || !attr(t, 'height')) warn(url, `Image without width/height (causes layout shift): ${src}`);
-    if (src.startsWith('/') && assetExists(src) && kb(path.join(DIST, src.split('?')[0])) > BUDGET.imageKB) warn(url, `Image over ${BUDGET.imageKB} KB: ${src}`);
+    if (src.startsWith('/') && assetExists(src) && kb(path.join(distDir, src.split('?')[0])) > budget.imageKB) warn(url, `Image over ${budget.imageKB} KB: ${src}`);
   }
 
   // Speed budget
   const htmlKB = Buffer.byteLength(html) / 1024;
-  if (htmlKB > BUDGET.htmlKB) warn(url, `HTML is ${htmlKB.toFixed(0)} KB (budget ${BUDGET.htmlKB}).`);
+  if (htmlKB > budget.htmlKB) warn(url, `HTML is ${htmlKB.toFixed(0)} KB (budget ${budget.htmlKB}).`);
   let js = 0;
   for (const m of html.matchAll(/<script\b[^>]*src=["']([^"']+)["'][^>]*>/gi)) {
     const s = m[1];
-    if (s.startsWith('/') && assetExists(s)) js += kb(path.join(DIST, s.split('?')[0]));
+    if (s.startsWith('/') && assetExists(s)) js += kb(path.join(distDir, s.split('?')[0]));
     else if (/^https?:/.test(s)) {
       const inHead = (html.split(/<\/head>/i)[0] || '').includes(m[0]);
       if (inHead && !/\b(async|defer|type=["']module)/i.test(m[0])) fail(url, `Third-party script blocks loading in <head>: ${s}`);
     }
   }
-  if (js > BUDGET.jsKB) warn(url, `Loads ${js.toFixed(0)} KB of JavaScript (budget ${BUDGET.jsKB}).`);
+  if (js > budget.jsKB) warn(url, `Loads ${js.toFixed(0)} KB of JavaScript (budget ${budget.jsKB}).`);
   if (/fonts\.googleapis\.com/.test(html) && !/display=swap/.test(html)) warn(url, 'Google Fonts without display=swap. Better: self-host fonts.');
 
   // Links
   for (const m of html.matchAll(/<a\b[^>]*href=["']([^"'#]+)["']/gi)) {
     let h = m[1];
-    if (SITE && h.startsWith(SITE)) h = h.slice(SITE.length) || '/';
+    if (site && h.startsWith(site)) h = h.slice(site.length) || '/';
     if (!h.startsWith('/') || h.startsWith('//')) continue;
     const clean = h.split(/[?#]/)[0];
     const norm = clean.endsWith('/') || /\.[a-z0-9]+$/i.test(clean) ? clean : clean + '/';
@@ -246,7 +246,7 @@ for (const p of pages) {
   if (!footer) conv(url, 'No <footer>. The footer is where every archive link lives.');
   else if (/href=["'][^"']*\/thanks\//i.test(footer)) conv(url, 'Footer links to a success page. Success pages are only reached by converting.');
   else for (const a of archives)
-    if (!footer.includes(`href="${a}"`) && !footer.includes(`href="${SITE}${a}"`)) conv(url, `Footer does not link to the ${a} archive.`);
+    if (!footer.includes(`href="${a}"`) && !footer.includes(`href="${site}${a}"`)) conv(url, `Footer does not link to the ${a} archive.`);
 
   // One conversion goal per page. Mark every call-to-action button, link and
   // form with data-cta="<goal>" (for example data-cta="free-quote").
@@ -276,13 +276,13 @@ for (const p of pages) {
   // what the visitor gets, not on word count. Mark them <meta name="page-role" content="resource">.
   const role = metaContent(html, 'page-role') || 'search';
   if (role === 'resource' && type === 'landing' && !/data-preview\b/i.test(html)) warn(url, 'Resource page has no preview of what they get (mark it data-preview: an image, sample or agenda).');
-  const min = type === 'archive' ? BUDGET.minWordsArchive : type === 'landing' ? (role === 'resource' ? BUDGET.minWordsResource : BUDGET.minWordsDetail) : 0;
+  const min = type === 'archive' ? budget.minWordsArchive : type === 'landing' ? (role === 'resource' ? budget.minWordsResource : budget.minWordsDetail) : 0;
   if (w.length < min) warn(url, `Only ${w.length} words of real content (aim ${min}+). Thin pages rarely rank or get cited.`);
   if (/—/.test(text)) warn(url, `Copy uses em dashes (${(text.match(/—/g) || []).length}). Use a full stop, comma or colon.`);
   const lower = ' ' + text.toLowerCase() + ' ';
-  const hits = BANNED_WORDS.filter(b => new RegExp(`[^a-z]${b.replace(/[-]/g, '[- ]')}[^a-z]`).test(lower));
+  const hits = bannedWords.filter(b => new RegExp(`[^a-z]${b.replace(/[-]/g, '[- ]')}[^a-z]`).test(lower));
   if (hits.length) warn(url, `Generic AI-sounding words: ${hits.join(', ')}`);
-  for (const r of BANNED_PHRASES) { const m = text.match(r); if (m) warn(url, `Stock phrase: "${m[0]}"`); }
+  for (const r of bannedPhrases) { const m = text.match(r); if (m) warn(url, `Stock phrase: "${m[0]}"`); }
   const sentences = text.split(/[.!?]+\s/).filter(s => words(s).length > 2);
   const avg = sentences.length ? w.length / sentences.length : 0;
   if (avg > 20) warn(url, `Sentences average ${avg.toFixed(0)} words. Aim under 16 so anyone can skim it.`);
@@ -303,17 +303,17 @@ const detail = pages.filter(p => p.type === 'landing' && p.words?.length > 80).m
 for (let i = 0; i < detail.length; i++) for (let j = i + 1; j < detail.length; j++) {
   const a = detail[i].sh, b = detail[j].sh; let inter = 0; for (const x of a) if (b.has(x)) inter++;
   const sim = inter / Math.min(a.size, b.size);
-  if (sim > BUDGET.maxSimilarity) fail(detail[j].url, `${Math.round(sim * 100)}% the same text as ${detail[i].url}. Rewrite it with detail specific to this page.`);
+  if (sim > budget.maxSimilarity) fail(detail[j].url, `${Math.round(sim * 100)}% the same text as ${detail[i].url}. Rewrite it with detail specific to this page.`);
 }
 
 // ---------- report ----------
 const order = { FAIL: 0, WARN: 1 };
 results.sort((a, b) => order[a.level] - order[b.level] || a.page.localeCompare(b.page));
 const fails = results.filter(r => r.level === 'FAIL').length, warns = results.length - fails;
-console.log(`\nChecked ${pages.length} pages in ${path.relative(process.cwd(), DIST) || DIST}${SITE ? ` for ${SITE}` : ''}\n`);
+console.log(`\nChecked ${pages.length} pages in ${path.relative(process.cwd(), distDir) || distDir}${site ? ` for ${site}` : ''}\n`);
 for (const r of results) console.log(`${r.level === 'FAIL' ? 'FAIL' : 'warn'}  ${r.page.padEnd(38)} ${r.msg}`);
 const byType = pages.reduce((m, p) => (m[p.type] = (m[p.type] || 0) + 1, m), {});
 console.log(`\nPages by type: ${Object.entries(byType).map(([k, v]) => `${k} ${v}`).join(', ')}`);
-console.log(fails ? `\n${fails} must-fix problem(s), ${warns} suggestion(s). ${FREEFORM ? 'Fixing the FAIL lines is strongly recommended.' : 'Fix the FAIL lines before publishing.'}\n`
+console.log(fails ? `\n${fails} must-fix problem(s), ${warns} suggestion(s). ${freeform ? 'Fixing the FAIL lines is strongly recommended.' : 'Fix the FAIL lines before publishing.'}\n`
   : `\nNo must-fix problems. ${warns} suggestion(s).\n`);
 process.exit(fails ? 1 : 0);

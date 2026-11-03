@@ -13,7 +13,7 @@ GEO (generative engine optimisation) and AEO (answer engine optimisation) mean m
   - Apple: `Applebot`, `Applebot-Extended`
   - Others: `CCBot` (Common Crawl, used by many models), `meta-externalagent`
   If the owner does not want their content used for **training**, they can block `GPTBot`, `Google-Extended`, `Applebot-Extended` and `CCBot` while still allowing the search and user bots. Explain the trade-off and let them choose. The default is allow all.
-- Check the Cloudflare AI-bot setting (see `cloudflare-setup.md`, Part 6). Confirm with curl that each bot gets a 200.
+- Check the Cloudflare AI-bot setting (see `cloudflare-setup.md`, Part 6). Confirm with `node scripts/fetch-site.mjs <site address> --bots` that each bot gets the page.
 - Everything is static HTML. AI crawlers mostly do not run JavaScript, so any text that needs JavaScript to appear is invisible to them.
 
 ## 2. llms.txt and llms-full.txt

@@ -59,10 +59,10 @@ You can also type `/website-builder` to start it directly.
 The plugin is one skill (instructions plus five small, readable Node.js scripts). It has no hooks, no MCP servers, no background processes and no telemetry. Nothing is ever sent to AI Foundations.
 
 When you use it, Claude may, with your approval at each step:
-- **Run on your computer:** `node` (the scripts in `scripts/`, which only read and write files in your website folder, except `fetch-site.mjs`, which downloads your own site's public pages so they can be checked, and `build-magnet.mjs`, which uses your installed Chrome or Edge, offline, to print lead magnets as PDF and images), `npm` to install Astro, Tailwind and Wrangler into your website folder, `astro build`, and `curl` to check your own live pages.
+- **Run on your computer:** `node` (the scripts in `scripts/`, which only read and write files in your website folder, except `fetch-site.mjs`, which reads your own site's public pages (and Google's free PageSpeed test for them) so they can be checked, and `build-magnet.mjs`, which uses your installed Chrome or Edge, offline, to print lead magnets as PDF and images), `npm` to install Astro, Tailwind and Wrangler into your website folder, and `astro build`.
 - **Publish through the host you choose**, using that host's own sign-in. By default this is Cloudflare, through Cloudflare's own browser login (Wrangler, installed into your website folder at a fixed version), to publish your site to Cloudflare Pages.
 - **Never handle your passwords or API keys.** Keyword data comes from free CSV exports (Google Keyword Planner, Search Console, Bing Webmaster Tools), or optionally from a paid keyword tool such as DataForSEO, Semrush or Ahrefs that you connect to Claude yourself.
-- **Fetch public pages:** Google PageSpeed Insights for your site's URLs, search results and competitor pages for keyword research, and `api.indexnow.org` to tell Bing about new pages (optional).
+- **Fetch public pages:** search results and competitor pages for keyword research, and `api.indexnow.org` to tell Bing about new pages (optional).
 - **Read files you choose to provide**, such as a customer export used to find where you really work. It stays on your computer and is never published.
 
 You make the Google Search Console, Bing Webmaster Tools and map-listing changes yourself, following Claude's step-by-step instructions.

@@ -59,11 +59,11 @@ The checker is one file with its budgets at the top. When the site gains a new p
 ### After every publish: live speed check
 Run Google PageSpeed Insights for the home page and one page of each type (mobile):
 ```
-curl -s "https://www.googleapis.com/pagespeedonline/v5/runPagespeed?url=https://SITE/PAGE/&strategy=mobile&category=performance&category=seo&category=accessibility&category=best-practices"
+node scripts/fetch-site.mjs <page address> --speed
 ```
-Report the four scores and LCP, INP and CLS in one line per page. Fix anything under 90. (No API key needed for occasional checks. If it rate-limits, wait a minute.)
+Report the four scores and LCP, INP and CLS in one line per page. Fix anything under 90. (No sign-up needed for occasional checks. If it rate-limits, wait a minute.)
 
 ### After the domain is live
 - Search Console: submit the sitemap and run URL Inspection on the home page and one page of each type.
 - Rich Results Test and validator.schema.org on one page of each type.
-- `curl -A` checks for the AI crawlers (see `cloudflare-setup.md`, Part 6).
+- AI crawler check: `node scripts/fetch-site.mjs <site address> --bots` (see `cloudflare-setup.md`, Part 6).

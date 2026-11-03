@@ -18,19 +18,19 @@ import { spawn } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
 const args = process.argv.slice(2);
-const SRC = args.find((a, i) => !a.startsWith('--') && !['--site', '--browser'].includes(args[i - 1]));
-if (!SRC || !fs.existsSync(path.join(SRC, 'magnet.md'))) {
+const srcDir = args.find((a, i) => !a.startsWith('--') && !['--site', '--browser'].includes(args[i - 1]));
+if (!srcDir || !fs.existsSync(path.join(srcDir, 'magnet.md'))) {
   console.error('Usage: node scripts/build-magnet.mjs lead-magnets/<slug> [--site public]\nThe folder needs a magnet.md file.');
   process.exit(1);
 }
-const SITE = args.includes('--site') ? args[args.indexOf('--site') + 1] : null;
-const PAGE = args.includes('--a4') ? 'A4' : 'Letter';
-const slug = path.basename(path.resolve(SRC));
-const OUT = path.join(SRC, 'build');
-fs.mkdirSync(OUT, { recursive: true });
+const site = args.includes('--site') ? args[args.indexOf('--site') + 1] : null;
+const page = args.includes('--a4') ? 'A4' : 'Letter';
+const slug = path.basename(path.resolve(srcDir));
+const outDir = path.join(srcDir, 'build');
+fs.mkdirSync(outDir, { recursive: true });
 
 // ---------- front matter ----------
-const raw = fs.readFileSync(path.join(SRC, 'magnet.md'), 'utf8').replace(/\r\n/g, '\n');
+const raw = fs.readFileSync(path.join(srcDir, 'magnet.md'), 'utf8').replace(/\r\n/g, '\n');
 const fm = {}; let body = raw;
 const m = raw.match(/^---\n([\s\S]*?)\n---\n?/);
 if (m) {
@@ -113,7 +113,7 @@ const insideList = inside.length ? `<ul class="inside">${inside.map(t => `<li>${
 
 // ---------- page ----------
 const css = `
-@page { size: ${PAGE}; margin: 18mm 16mm 20mm; }
+@page { size: ${page}; margin: 18mm 16mm 20mm; }
 * { box-sizing: border-box; }
 html { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { margin: 0; font-family: ${font}; color: ${ink}; font-size: 13.5pt; line-height: 1.5; }
@@ -161,7 +161,7 @@ ${render(body)}
 ${nextHtml}
 <footer class="run">${inline(fm.business)}${fm.website ? ` · ${inline(fm.website)}` : ''}${fm.updated ? ` · Updated ${inline(fm.updated)}` : ''}</footer>
 </main></body></html>`;
-const htmlPath = path.join(OUT, `${slug}.html`);
+const htmlPath = path.join(outDir, `${slug}.html`);
 fs.writeFileSync(htmlPath, html);
 
 // Cover images for previews, posts and ads: the cover alone, sized for social.
@@ -183,8 +183,8 @@ h1 { font-size: ${Math.round(w * (h > w ? 0.058 : 0.05))}px; line-height: 1.12; 
 </style></head><body><div class="doc"><div><div class="k">${inline(fm.kicker || 'Free ' + (fm.format || 'guide'))}</div>
 <h1>${inline(fm.title)}</h1>${fm.subtitle ? `<div class="s">${inline(fm.subtitle)}</div>` : ''}${inside.length ? `<ul class="i">${inside.slice(0, h > w ? 4 : 3).map(t => `<li>${inline(t)}</li>`).join('')}</ul>` : ''}</div>
 <div class="b">${inline(fm.business)}</div></div></body></html>`;
-fs.writeFileSync(path.join(OUT, 'cover.html'), coverPage(1080, 1350));
-fs.writeFileSync(path.join(OUT, 'square.html'), coverPage(1080, 1080));
+fs.writeFileSync(path.join(outDir, 'cover.html'), coverPage(1080, 1350));
+fs.writeFileSync(path.join(outDir, 'square.html'), coverPage(1080, 1080));
 
 // ---------- find a browser to print with ----------
 // The browser is found in its usual install folders, or given with --browser <path>.
@@ -224,12 +224,12 @@ if (browser) {
     const cap = setTimeout(() => finish(new Error('timed out after 60 seconds')), 60000);
   });
   try {
-    const pdf = path.join(OUT, `${slug}.pdf`);
+    const pdf = path.join(outDir, `${slug}.pdf`);
     await run(['--no-pdf-header-footer', `--print-to-pdf=${path.resolve(pdf)}`, pathToFileURL(path.resolve(htmlPath)).href], pdf);
     made.push(pdf);
     for (const [name, w, h] of [['cover', 1080, 1350], ['square', 1080, 1080]]) {
-      const png = path.join(OUT, `${name}.png`);
-      await run(['--hide-scrollbars', `--default-background-color=${coverBg.slice(1)}ff`, `--window-size=${w},${h}`, `--screenshot=${path.resolve(png)}`, pathToFileURL(path.resolve(path.join(OUT, `${name}.html`))).href], png);
+      const png = path.join(outDir, `${name}.png`);
+      await run(['--hide-scrollbars', `--default-background-color=${coverBg.slice(1)}ff`, `--window-size=${w},${h}`, `--screenshot=${path.resolve(png)}`, pathToFileURL(path.resolve(path.join(outDir, `${name}.html`))).href], png);
       made.push(png);
     }
   } catch (e) { console.log(`The browser could not print (${e.message.split('\n')[0]}). Open ${htmlPath} and use Print > Save as PDF.`); }
@@ -240,16 +240,16 @@ if (browser) {
 }
 
 // Extra files handed over as they are (CSV templates, .ics, images, ready-made files).
-const extras = fs.readdirSync(SRC).filter(f => !['magnet.md', 'build', 'promo.md', 'notes.md'].includes(f) && !f.startsWith('.') && fs.statSync(path.join(SRC, f)).isFile());
+const extras = fs.readdirSync(srcDir).filter(f => !['magnet.md', 'build', 'promo.md', 'notes.md'].includes(f) && !f.startsWith('.') && fs.statSync(path.join(srcDir, f)).isFile());
 
-if (SITE) {
-  const dl = path.join(SITE, 'downloads'); const img = path.join(SITE, 'images', 'lead-magnets');
+if (site) {
+  const dl = path.join(site, 'downloads'); const img = path.join(site, 'images', 'lead-magnets');
   fs.mkdirSync(dl, { recursive: true }); fs.mkdirSync(img, { recursive: true });
-  const pdf = path.join(OUT, `${slug}.pdf`);
+  const pdf = path.join(outDir, `${slug}.pdf`);
   if (fs.existsSync(pdf)) fs.copyFileSync(pdf, path.join(dl, `${slug}.pdf`));
   fs.copyFileSync(htmlPath, path.join(dl, `${slug}.html`)); // opens in any phone browser, no PDF viewer needed
-  for (const f of extras) fs.copyFileSync(path.join(SRC, f), path.join(dl, f));
-  for (const n of ['cover', 'square']) { const p = path.join(OUT, `${n}.png`); if (fs.existsSync(p)) fs.copyFileSync(p, path.join(img, `${slug}-${n}.png`)); }
+  for (const f of extras) fs.copyFileSync(path.join(srcDir, f), path.join(dl, f));
+  for (const n of ['cover', 'square']) { const p = path.join(outDir, `${n}.png`); if (fs.existsSync(p)) fs.copyFileSync(p, path.join(img, `${slug}-${n}.png`)); }
   console.log(`Copied the download into ${dl} and the cover images into ${img}.`);
 }
 
@@ -263,5 +263,5 @@ if (!fm.cta || !fm.ctaLink) notes.push('No cta and ctaLink in the front matter, 
 if (fm.title.length > 70) notes.push(`Title is ${fm.title.length} characters. Shorter titles read better on a cover and in a feed.`);
 console.log(`\nBuilt "${fm.title}" (${wordsN} words${fm.format ? `, ${fm.format}` : ''}):`);
 for (const f of made) console.log(`  ${f}`);
-for (const f of extras) console.log(`  ${path.join(SRC, f)} (handed over as is)`);
+for (const f of extras) console.log(`  ${path.join(srcDir, f)} (handed over as is)`);
 if (notes.length) { console.log('\nBefore it goes out:'); for (const n of notes) console.log(`  - ${n}`); }

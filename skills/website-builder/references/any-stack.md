@@ -32,7 +32,7 @@ Find the platform's current way to do each of these: search its documentation, o
 | Redirects and headers | The host's config (`_redirects`, `vercel.json`, `netlify.toml`, server config) or framework config | The platform's redirects or URL settings |
 | Analytics and conversion tracking | Script or tag in the layout, loaded async | The platform's analytics or code-injection setting |
 
-Rendering: search engines and AI crawlers must get the page's text in the HTML. For frameworks, prefer static or server rendering, not client-only. For builders this is usually already true. Check it by fetching the page as a crawler: `curl -s -A "GPTBot" https://<domain>/<page>/ | grep -c "<a phrase from the page>"`.
+Rendering: search engines and AI crawlers must get the page's text in the HTML. For frameworks, prefer static or server rendering, not client-only. For builders this is usually already true. Check it by fetching the page as each AI crawler: `node scripts/fetch-site.mjs <page address> --bots --text "<a phrase from the page>"`.
 
 ## Hosting
 
