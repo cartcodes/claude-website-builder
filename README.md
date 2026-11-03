@@ -6,6 +6,7 @@ Claude builds and grows a fast website whose pages are made to turn visitors int
 - **One page, one goal.** Everything important is on the first screen. There's no menu to distract people, and every page is built to get its one action taken.
 - **Archives that fit your business.** Places you serve, services, the people you help, free resources, events: whatever fits you, linked from the footer so visitors, Google and AI assistants can find every page.
 - **Lead magnets made for you.** Claude asks "What lead magnets do you want me to make for you?" and offers ideas built around what you sell, picked to bring buyers rather than freebie hunters. It makes the downloadable PDF, a phone-friendly version and cover images, plus the social posts, comment-to-DM flow, ads and follow-up emails to promote it.
+- **Your own lead inbox (the Lead Desk).** A free, private CRM that runs in your own Cloudflare account. It shows every lead, where it came from (page, lead magnet, Instagram, Google, ad campaign), whether it became a customer and how much they spent, plus each page's conversion rate. Invite your team by email. Get alerts on your phone, by email, or in Slack, Discord, Google Chat or Teams, plus a daily or weekly summary. Works with any website.
 - **Success pages that deliver.** Booked calls, sent forms, downloads, copy-and-paste resources, registrations, purchases and quiz results each get a proper success page with one next step.
 - **Keyword research with real data.** Every search page targets something people actually search for and that you can win. Places are found at the right level of detail, and only if places matter to you.
 - **Plain, convincing copy** with no "AI voice".
@@ -45,6 +46,7 @@ mkdir -p ~/.claude/skills && unzip ~/Downloads/website-builder.zip -d ~/.claude/
 Open Claude Code in an empty folder and type:
 
 - `Build me a website` to start. Claude begins by asking what you sell and offering lead magnets and pages to make for you.
+- `Set up my Lead Desk` to get your own lead inbox with logins, results and alerts.
 - `Make me a lead magnet` to get a ready-to-download freebie, with its posts, ads and emails.
 - `Add a landing page for [the thing]` to grow the site, for example a new free guide, a new service, a new event or a new area.
 - `Find keywords for new pages` to get a page plan backed by real search data.
@@ -62,6 +64,7 @@ When you use it, Claude may, with your approval at each step:
 - **Run on your computer:** `node` (the scripts in `scripts/`, which only read and write files in your website folder, except `fetch-site.mjs`, which reads your own site's public pages (and Google's free PageSpeed test for them) so they can be checked, and `build-magnet.mjs`, which uses your installed Chrome or Edge, offline, to print lead magnets as PDF and images), `npm` to install Astro, Tailwind and Wrangler into your website folder, and `astro build`.
 - **Publish through the host you choose**, using that host's own sign-in. By default this is Cloudflare, through Cloudflare's own browser login (Wrangler, installed into your website folder at a fixed version), to publish your site to Cloudflare Pages.
 - **Never handle your passwords or API keys.** Keyword data comes from free CSV exports (Google Keyword Planner, Search Console, Bing Webmaster Tools), or optionally from a paid keyword tool such as DataForSEO, Semrush or Ahrefs that you connect to Claude yourself.
+- **Set up the Lead Desk (optional)** in your own Cloudflare account: a small app and database that receive your website's form leads. Leads stay in your account. Alerts go only where you choose on its Settings page (your email through Cloudflare Email Routing, a Slack/Discord/Google Chat/Teams/Zapier/Make webhook link you paste in, or an ntfy phone topic). Its visit counter uses no cookies and keeps no IP addresses.
 - **Fetch public pages:** search results and competitor pages for keyword research, and `api.indexnow.org` to tell Bing about new pages (optional).
 - **Read files you choose to provide**, such as a customer export used to find where you really work. It stays on your computer and is never published.
 
@@ -84,10 +87,12 @@ skills/website-builder/
     technical-seo.md               metadata, structured data, speed budgets, the checks
     indexing.md                    getting indexed in Google and Bing, step by step
     cloudflare-setup.md            account, connection, publishing, your own domain
+    lead-desk.md                   the Lead Desk: setup, forms on any site, alerts, team, backups
     any-stack.md                   freeform mode: the same conventions on any stack and host
   assets/contracts/
     archive-templates/             place, offering, offering-in-place, audience, comparison, lead-magnet, event
     success/                       booked-call, form-submitted, file-delivery, copy-paste, registration, quiz-result, purchase, signup
+  assets/lead-desk/                the Lead Desk: Cloudflare app, database layout, admin pages, form helper
   scripts/
     contracts.mjs                  turns contracts into build rules, and checks content files
     new-page.mjs                   creates a new page (and its success page) from a contract

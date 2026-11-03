@@ -1,0 +1,17 @@
+{
+  "name": "lead-desk",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "desk:login": "wrangler login",
+    "desk:whoami": "wrangler whoami",
+    "desk:db": "wrangler d1 create lead-desk",
+    "desk:schema": "wrangler d1 execute lead-desk --remote --file schema.sql",
+    "desk:deploy": "wrangler deploy",
+    "desk:invite": "node scripts/desk-invite.mjs",
+    "desk:backup": "wrangler d1 export lead-desk --remote --output backups/lead-desk-backup.sql",
+    "desk:logs": "wrangler tail",
+    "desk:dev": "wrangler d1 execute lead-desk --local --file schema.sql && wrangler dev"
+  },
+  "devDependencies": {}
+}

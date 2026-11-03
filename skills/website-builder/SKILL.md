@@ -1,6 +1,6 @@
 ---
 name: website-builder
-description: Build, grow and check a fast lead-generation website and lead magnets for any business, run by Claude Code for a non-technical owner. Landing pages with one conversion goal each, grouped into footer-linked archives that fit the business, with success-page contracts for every action (booked call, form, download, copy-paste, registration, purchase). Makes lead magnets that bring buyers: suggests ideas tied to the offer, builds the PDF, phone version and cover images, and writes the posts, comment-to-DM flow, ads and emails. Real keyword research, plain persuasive copy with no AI tells, full SEO and GEO/AEO, indexing and speed checks. Guided interview with free Cloudflare hosting, or Freeform on any stack and host. Use for a website, landing page, lead magnet or freebie, keywords, SEO or AI visibility, indexing, or a site check.
+description: Build, grow and check a fast lead-generation website and lead magnets for any business, run by Claude Code for a non-technical owner. Landing pages with one conversion goal each, grouped into footer-linked archives that fit the business, with success-page contracts for every action (booked call, form, download, copy-paste, registration, purchase). Makes lead magnets that bring buyers: suggests ideas tied to the offer, builds the PDF, phone version and cover images, and writes the posts, comment-to-DM flow, ads and emails. Real keyword research, plain persuasive copy with no AI tells, full SEO and GEO/AEO, indexing and speed checks. Guided interview with free Cloudflare hosting, or Freeform on any stack and host. Includes the Lead Desk, a free CRM on the business's Cloudflare account with admin logins, lead sources, results and alerts. Use for a website, landing page, lead magnet or freebie, lead tracking or CRM, keywords, SEO or AI visibility, indexing, or a site check.
 ---
 
 # Website builder
@@ -23,6 +23,7 @@ Remember the answer in `content/notes.md` (or the project's notes file) so you d
 Follow `references/any-stack.md`. In short:
 - **Their words decide.** Build what they ask, in the order they ask, on the stack, platform and host they name or already have. If they name none, pick something sensible for the job and say what you picked in one sentence. Don't run the interview, don't require contracts or archives, and don't argue with layout or design choices.
 - **The conventions are your defaults, not rules.** Write copy with `references/copywriting.md` (including the AI-tells sweep), shape pages with `references/conversion.md`, and apply `references/technical-seo.md`, `references/geo-aeo.md` and `references/indexing.md` wherever they fit. If a request clearly works against its own goal (two competing buttons, a blocked AI crawler, a page hidden from search), mention it once, in one sentence, then do it their way.
+- **The Lead Desk works in Freeform too**, for any site on any host: forms post to it and one script tag goes in the site footer (`references/lead-desk.md`).
 - **Lead magnets work the same way in Freeform.** "Make me a lead magnet" goes straight to `references/lead-magnets.md` and `scripts/build-magnet.mjs`, for any site or none at all.
 - **Use any other reference when it helps** (keyword research, archives, success pages, contracts), and only when they ask for it or it plainly serves what they asked.
 - **Checks still run** where they can: point `scripts/check-site.mjs --freeform` at the site's built HTML folder, or fetch a live site first with `scripts/fetch-site.mjs`. In freeform, layout conventions show as suggestions, not failures.
@@ -47,7 +48,7 @@ The site grows by adding landing pages, never by adding menu items. Every page f
 - Self-serve: do the thinking yourself and offer short menus of concrete options to pick from (AskUserQuestion), with your recommendation first. Ask open questions only for facts only they know.
 - One step at a time. Plain words. Wait for "done" before the next step.
 - When they must click something, say exactly what the button says and where it is on screen.
-- Never handle passwords, API keys or tokens. Never ask for them in the chat, and never read them from files or the computer. Services that need a login are connected by the person themselves: Cloudflare through its browser login, other tools through their own Claude connectors or CSV exports.
+- Never handle passwords, API keys or tokens. Never ask for them in the chat, and never read them from files or the computer. Services that need a login are connected by the person themselves: Cloudflare through its browser login, other tools through their own Claude connectors or CSV exports. Lead Desk passwords and webhook links are typed by the person into their own Lead Desk pages, never into the chat.
 - Ask before anything that costs money, changes a domain, or deletes something.
 - After each step, say what you did in one sentence. No jargon.
 - Show, don't describe: start the local preview and give them the link whenever there is something to see.
@@ -61,7 +62,8 @@ The site grows by adding landing pages, never by adding menu items. Every page f
 4. **Add a new archive** (a new kind of landing page). Follow "Adding an archive" in `references/contracts.md`.
 5. **Find keywords and places, and plan new pages.** Phase 4, then hand back the page plan.
 6. **Check, fix and index an existing site.** Phases 8, 9 and 10.
-7. **Set up a routine** that adds pages on a schedule. See "Routines" in `references/contracts.md`.
+7. **Set up the Lead Desk**, the business's own lead inbox with admin logins, results and alerts, on its Cloudflare account. Follow `references/lead-desk.md`. Works with any website.
+8. **Set up a routine** that adds pages on a schedule. See "Routines" in `references/contracts.md`.
 
 ## Phase 1: What should I make for you? (always first in the interview)
 
@@ -78,7 +80,7 @@ Read `about.md` and `voice.md` first if they exist, and skip anything they alrea
 - Proof: years in business, numbers served, credentials or licences, guarantees, awards, rating and review count, and 3+ testimonials with name, place (if relevant) and a specific result.
 - Prices or ranges they are happy to publish, and how long things take.
 - For each offer, the specific facts its page needs (the contract's fields tell you which).
-- Where leads go: booking tool, form tool, CRM, email tool, spreadsheet. If they have none, suggest a free one and help set it up.
+- Where leads go. Offer a menu: **their own Lead Desk** (recommended: free, on their Cloudflare account, shows where every lead came from and which became customers; `references/lead-desk.md`), the CRM or email tool they already use (the Lead Desk can pass leads on to it), or a booking tool for calls.
 - Brand: logo, colours, real photos of their work and people.
 - Name, address (if public) and phone exactly as on their Google Business Profile, plus links to every official profile.
 - Whether they own a domain, and where they bought it.
@@ -131,6 +133,10 @@ Follow `references/copywriting.md` and `references/conversion.md`: problem-aware
 - `references/technical-seo.md`: metadata, structured data, sitemap, robots.txt, llms.txt, speed.
 - Add `"check": "node scripts/contracts.mjs check && astro build && node scripts/check-site.mjs dist"` to `package.json` and run `npm run check` after every change. **Never publish with a FAIL line.** Fix warnings unless there is a stated reason not to, and tell the person which ones you left and why.
 
+## Phase 8b: Lead Desk
+
+If they chose the Lead Desk, set it up with `references/lead-desk.md` before publishing: database, address (their subdomain if the domain is on Cloudflare), owner invite, forms posting to it with `_success` set to each page's success page, the helper script on every page, and at least one alert. Send a test lead from the local preview and show it arriving.
+
 ## Phase 9: Publish
 
 1. Show the local preview and wait for their okay.
@@ -149,8 +155,8 @@ Follow `references/indexing.md`: pre-flight checks, Google Search Console, Bing 
    - To add a page: "Tell Claude: add a landing page for [the thing] to [the archive]."
    - To publish changes: "Tell Claude: publish my site."
    - To check health: "Tell Claude: check my site."
-2. Write `SITE-GUIDE.md`: those lines, the live links, every archive with its pages, goals and success pages, and where each kind of content lives.
-3. Offer the monthly routine (conversion rate per page and one improvement at a time, new page ideas from Search Console, indexing check, AI visibility check) and, if they want, a scheduled Claude routine that adds pages under the contracts.
+2. Write `SITE-GUIDE.md`: those lines, the live links (including the Lead Desk's `/admin/` address, if they have one), every archive with its pages, goals and success pages, and where each kind of content lives.
+3. Offer the monthly routine (the Lead Desk's Results page or the analytics tool: conversion rate per page and one improvement at a time, new page ideas from Search Console, indexing check, AI visibility check) and, if they want, a scheduled Claude routine that adds pages under the contracts.
 
 ## Never
 
