@@ -183,12 +183,12 @@
   }
 
   function settingsView() {
-    var main = shell('settings', '<div id="set"><p class="muted">Loading…</p></div>');
+    var main = shell('settings', '<div id="settings-panel"><p class="muted">Loading…</p></div>');
     api('/api/settings').then(function (j) {
       var s = j.settings, owner = state.me.role === 'owner', dis = owner ? '' : ' disabled';
-      document.getElementById('set').innerHTML = (owner ? '' : '<div class="msg err">Only an owner can change these settings.</div>') +
-        '<form id="f"><div class="card"><h2>Which websites can send leads</h2><p class="muted small">Your website addresses, one per line, like https://yourbusiness.com. Forms on other sites are refused. Leave empty only while testing.</p>' +
-        '<textarea id="allowed_origins"' + dis + ' placeholder="' + esc(j.siteOrigins || 'https://yourbusiness.com') + '">' + esc(s.allowed_origins) + '</textarea></div>' +
+      document.getElementById('settings-panel').innerHTML = (owner ? '' : '<div class="msg err">Only an owner can change these settings.</div>') +
+        '<form id="f"><div class="card"><h2>Which websites can send leads</h2><p class="muted small">Your website addresses, one per line, each starting with the secure web prefix, exactly as they appear in the browser bar. Forms on other sites are refused. Leave empty only while testing.</p>' +
+        '<textarea id="allowed_origins"' + dis + ' placeholder="' + esc(j.siteOrigins || 'Your website address') + '">' + esc(s.allowed_origins) + '</textarea></div>' +
         '<div class="card"><h2>Email alerts</h2>' + (j.mail ? '<p class="muted small">Sent through Cloudflare Email Routing to every person on the Team page who has alerts on. Each address must be verified in Cloudflare Email Routing first.</p>' +
           '<label for="mail_from">Send from (an address on your domain)</label><input id="mail_from"' + dis + ' placeholder="leads@yourbusiness.com" value="' + esc(s.mail_from) + '">' +
           '<label for="notify_email">New lead emails</label><select id="notify_email"' + dis + '><option value="on">On</option><option value="off"' + (s.notify_email === 'off' ? ' selected' : '') + '>Off</option></select>'
