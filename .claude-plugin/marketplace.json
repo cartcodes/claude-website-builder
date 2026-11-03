@@ -8,7 +8,8 @@
     {
       "name": "website-builder",
       "source": "./",
-      "description": "Build, grow and check a fast lead-generation website with Claude Code, with SEO, AI search and keyword research built in."
+      "description": "Build and grow a lead-generation website for any business with Claude Code: landing pages with one conversion goal each, footer-linked archives chosen for the business, success-page contracts, real keyword and place research, plain copy, full SEO plus AI search, indexing, and free Cloudflare hosting.",
+      "version": "1.1.0"
     }
   ]
 }
