@@ -67,10 +67,12 @@ const attr = (tag, name) => {
   const m = tag.match(new RegExp(`\\s${name}\\s*=\\s*(?:"([^"]*)"|'([^']*)'|([^\\s>]+))`, 'i'));
   return m ? (m[1] ?? m[2] ?? m[3]) : undefined;
 };
-const metaContent = (html, key) => {
+// True when the text is a complete web address on a secure connection.
+const isHttpsUrl = t => { try { return new URL(t).protocol === 'https:'; } catch { return false; } };
+const metaContent = (html, metaName) => {
   for (const m of html.matchAll(/<meta\b[^>]*>/gi)) {
     const t = m[0];
-    if ((attr(t, 'name') || attr(t, 'property') || '').toLowerCase() === key) return attr(t, 'content');
+    if ((attr(t, 'name') || attr(t, 'property') || '').toLowerCase() === metaName) return attr(t, 'content');
   }
 };
 const stripTags = h => h.replace(/<script[\s\S]*?<\/script>/gi, ' ').replace(/<style[\s\S]*?<\/style>/gi, ' ')
@@ -96,7 +98,7 @@ if (!sitemapFiles.length) fail('site', 'No sitemap.xml. Search engines and AI cr
 for (const f of sitemapFiles) for (const m of read(f).matchAll(/<loc>([^<]+)<\/loc>/g)) {
   try { sitemapUrls.add(new URL(m[1]).pathname); } catch {}
 }
-const site = siteArg || (() => { for (const f of sitemapFiles) { const m = read(f).match(/<loc>(https?:\/\/[^/<]+)/); if (m) return m[1]; } })();
+const site = siteArg || (() => { for (const f of sitemapFiles) { const m = read(f).match(/<loc>\s*([^<\s]+)/); if (m) { try { return new URL(m[1]).origin; } catch {} } } })();
 
 const robotsPath = path.join(distDir, 'robots.txt');
 if (!fs.existsSync(robotsPath)) fail('site', 'No robots.txt.');
@@ -174,7 +176,7 @@ for (const p of pages) {
   if (!canon) fail(url, 'Missing canonical link.');
   else {
     const href = attr(canon, 'href') || '';
-    if (!/^https:\/\//.test(href)) fail(url, `Canonical must be a full https URL, got "${href}".`);
+    if (!isHttpsUrl(href)) fail(url, `Canonical must be a full https URL, got "${href}".`);
     else if (new URL(href).pathname !== url) warn(url, `Canonical points to ${new URL(href).pathname}, not this page.`);
   }
   for (const k of ['og:title', 'og:description', 'og:image']) if (!metaContent(html, k)) warn(url, `Missing ${k} (controls how links look when shared).`);
@@ -224,7 +226,7 @@ for (const p of pages) {
   for (const m of html.matchAll(/<script\b[^>]*src=["']([^"']+)["'][^>]*>/gi)) {
     const s = m[1];
     if (s.startsWith('/') && assetExists(s)) js += kb(path.join(distDir, s.split('?')[0]));
-    else if (/^https?:/.test(s)) {
+    else if (/^[a-z]+:/i.test(s) || s.startsWith('//')) { // a script from another site
       const inHead = (html.split(/<\/head>/i)[0] || '').includes(m[0]);
       if (inHead && !/\b(async|defer|type=["']module)/i.test(m[0])) fail(url, `Third-party script blocks loading in <head>: ${s}`);
     }
@@ -292,9 +294,9 @@ for (const p of pages) {
 for (const p of pages) if (p.url !== '/' && !inbound.get(p.url) && p.type !== 'other' && p.type !== 'success') conv(p.url, 'Orphan page: no other page links to it (add it to its archive).');
 
 // Duplicate titles, descriptions, H1s
-for (const key of ['title', 'desc', 'h1']) {
+for (const field of ['title', 'desc', 'h1']) {
   const seen = new Map();
-  for (const p of pages) if (p[key]) { if (seen.has(p[key])) fail(p.url, `Same ${key} as ${seen.get(p[key])}: "${p[key]}"`); else seen.set(p[key], p.url); }
+  for (const p of pages) if (p[field]) { if (seen.has(p[field])) fail(p.url, `Same ` + field + ` as ${seen.get(p[field])}: "${p[field]}"`); else seen.set(p[field], p.url); }
 }
 
 // Near-duplicate content (the doorway-page trap for location pages)
