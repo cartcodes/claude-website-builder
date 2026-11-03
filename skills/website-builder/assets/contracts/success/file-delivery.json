@@ -1,0 +1,56 @@
+{
+  "id": "file-delivery",
+  "label": "File delivered",
+  "usedWhen": "A lead magnet file was requested (gated) or the visitor clicked to get it",
+  "urlPattern": "/thanks/{slug}/",
+  "indexing": "noindex; never in sitemap, llms.txt, archives or the footer",
+  "mustShow": [
+    "a download button (a[download] linking to the file)",
+    "how to use it",
+    "whether it was also emailed",
+    "one next step"
+  ],
+  "nextStep": "one next step, marked data-cta",
+  "tracking": "The success page view is the conversion. Fire ad pixels and analytics goals here.",
+  "fields": {
+    "title": {
+      "type": "string",
+      "max": 65
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "Confirms it worked, in plain words"
+    },
+    "message": {
+      "type": "string",
+      "max": 240,
+      "help": "One or two sentences: what just happened"
+    },
+    "nextStepCta": {
+      "type": "string",
+      "max": 40
+    },
+    "nextStepGoal": {
+      "type": "string"
+    },
+    "nextStepLink": {
+      "type": "string"
+    },
+    "file": {
+      "type": "string",
+      "help": "Path in public/downloads/"
+    },
+    "fileLabel": {
+      "type": "string"
+    },
+    "howToUse": {
+      "type": "list",
+      "min": 2
+    },
+    "emailed": {
+      "type": "boolean",
+      "help": "true if the email tool also sends it"
+    }
+  }
+}

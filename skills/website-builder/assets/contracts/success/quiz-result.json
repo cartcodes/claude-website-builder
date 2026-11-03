@@ -1,0 +1,52 @@
+{
+  "id": "quiz-result",
+  "label": "Quiz result",
+  "usedWhen": "A quiz or assessment was completed. One success page per result.",
+  "urlPattern": "/thanks/{slug}/",
+  "indexing": "noindex; never in sitemap, llms.txt, archives or the footer",
+  "mustShow": [
+    "the result in plain words",
+    "what it means for them",
+    "what to do about it",
+    "one next step matched to this result"
+  ],
+  "nextStep": "one next step, marked data-cta",
+  "tracking": "The success page view is the conversion. Fire ad pixels and analytics goals here.",
+  "fields": {
+    "title": {
+      "type": "string",
+      "max": 65
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "Confirms it worked, in plain words"
+    },
+    "message": {
+      "type": "string",
+      "max": 240,
+      "help": "One or two sentences: what just happened"
+    },
+    "nextStepCta": {
+      "type": "string",
+      "max": 40
+    },
+    "nextStepGoal": {
+      "type": "string"
+    },
+    "nextStepLink": {
+      "type": "string"
+    },
+    "resultKey": {
+      "type": "string"
+    },
+    "resultSummary": {
+      "type": "string",
+      "max": 300
+    },
+    "recommendation": {
+      "type": "list",
+      "min": 2
+    }
+  }
+}

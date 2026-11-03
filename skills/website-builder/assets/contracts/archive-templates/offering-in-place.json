@@ -1,0 +1,126 @@
+{
+  "template": "offering-in-place",
+  "id": "SET-PER-BUSINESS",
+  "label": "Offering in a place",
+  "path": "SET-PER-BUSINESS",
+  "pathOptions": [
+    "nested under the place archive"
+  ],
+  "itemNoun": "offering in a place",
+  "purpose": "One page per offering + place pair that passed the keyword gate (for example: [service] in [place])",
+  "role": "search",
+  "roleNote": "search = built to rank and be quoted by AI: passes the keyword gate, full SEO/AEO/GEO. resource = reached from content, social posts or email: shows exactly what the visitor gets, no keyword gate, lighter word count, preview required. both = a resource that also passed the keyword gate.",
+  "fitsBusinessModels": [
+    "local service businesses with demand at the service + place level"
+  ],
+  "trafficSources": [
+    "search"
+  ],
+  "parentArchive": "place",
+  "goal": {
+    "defaultGoal": "{shared}",
+    "defaultSuccess": "form-submitted",
+    "note": "Pages that share a goal share one success page. {slug} gives each page its own."
+  },
+  "schemaType": "Service",
+  "minWords": 350,
+  "footerLinks": 0,
+  "fields": {
+    "title": {
+      "type": "string",
+      "min": 25,
+      "max": 65,
+      "help": "Main keyword first, then the business name"
+    },
+    "description": {
+      "type": "string",
+      "min": 70,
+      "max": 160,
+      "help": "What the page offers, one proof point, the action"
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "The visitor's problem or outcome, with the main keyword"
+    },
+    "keyword": {
+      "type": "string",
+      "help": "Main keyword for this page, from research/keywords.csv"
+    },
+    "secondaryKeywords": {
+      "type": "list",
+      "min": 0
+    },
+    "subtext": {
+      "type": "string",
+      "max": 180,
+      "help": "Two lines max: who it is for + the strongest proof"
+    },
+    "goal": {
+      "type": "string",
+      "help": "The one conversion goal id. Used in data-cta and names the success page"
+    },
+    "cta": {
+      "type": "string",
+      "max": 40,
+      "help": "Button text that says what they get"
+    },
+    "success": {
+      "type": "ref",
+      "to": "success",
+      "help": "The success page this goal ends on (usually the same as goal)"
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "min": 2
+    },
+    "faqs": {
+      "type": "faqs",
+      "min": 3
+    },
+    "updated": {
+      "type": "date"
+    },
+    "image": {
+      "type": "string",
+      "optional": true,
+      "help": "A real photo in src/assets"
+    },
+    "socialHook": {
+      "type": "string",
+      "optional": true,
+      "help": "The phrase social posts use to send people here (for example: comment GUIDE)"
+    },
+    "place": {
+      "type": "ref",
+      "to": "place archive",
+      "help": "Slug of the place page this sits under"
+    },
+    "offering": {
+      "type": "ref",
+      "to": "offering archive",
+      "help": "Slug of the offering page"
+    },
+    "localDetails": {
+      "type": "list",
+      "min": 2
+    },
+    "priceRange": {
+      "type": "string",
+      "optional": true
+    },
+    "demandEvidence": {
+      "type": "string",
+      "help": "One line from research/keywords.csv: volume and source, or the buying signals seen in the results"
+    }
+  },
+  "sections": [
+    "the problem in their words",
+    "how it gets solved in this place",
+    "local proof",
+    "price and time here",
+    "faqs",
+    "call to action again",
+    "also nearby"
+  ]
+}

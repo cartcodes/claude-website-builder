@@ -1,0 +1,53 @@
+{
+  "id": "booked-call",
+  "label": "Booked call",
+  "usedWhen": "A call, consultation, demo or inspection was booked in a scheduling tool, which redirects here",
+  "urlPattern": "/thanks/{slug}/",
+  "indexing": "noindex; never in sitemap, llms.txt, archives or the footer",
+  "mustShow": [
+    "confirmation that the call is booked",
+    "what to prepare",
+    "what happens on the call",
+    "how to reschedule",
+    "one next step (e.g. a short video or a guide)"
+  ],
+  "nextStep": "one next step, marked data-cta",
+  "tracking": "The success page view is the conversion. Fire ad pixels and analytics goals here.",
+  "fields": {
+    "title": {
+      "type": "string",
+      "max": 65
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "Confirms it worked, in plain words"
+    },
+    "message": {
+      "type": "string",
+      "max": 240,
+      "help": "One or two sentences: what just happened"
+    },
+    "nextStepCta": {
+      "type": "string",
+      "max": 40
+    },
+    "nextStepGoal": {
+      "type": "string"
+    },
+    "nextStepLink": {
+      "type": "string"
+    },
+    "whatToPrepare": {
+      "type": "list",
+      "min": 1
+    },
+    "whatHappensNext": {
+      "type": "list",
+      "min": 2
+    },
+    "rescheduleInfo": {
+      "type": "string"
+    }
+  }
+}

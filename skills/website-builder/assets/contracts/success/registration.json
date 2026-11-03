@@ -1,0 +1,51 @@
+{
+  "id": "registration",
+  "label": "Registration",
+  "usedWhen": "A webinar, workshop or event seat was saved",
+  "urlPattern": "/thanks/{slug}/",
+  "indexing": "noindex; never in sitemap, llms.txt, archives or the footer",
+  "mustShow": [
+    "date and time (shown in the visitor's timezone too)",
+    "add-to-calendar link (.ics file, data-calendar)",
+    "how to join",
+    "one next step"
+  ],
+  "nextStep": "one next step, marked data-cta",
+  "tracking": "The success page view is the conversion. Fire ad pixels and analytics goals here.",
+  "fields": {
+    "title": {
+      "type": "string",
+      "max": 65
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "Confirms it worked, in plain words"
+    },
+    "message": {
+      "type": "string",
+      "max": 240,
+      "help": "One or two sentences: what just happened"
+    },
+    "nextStepCta": {
+      "type": "string",
+      "max": 40
+    },
+    "nextStepGoal": {
+      "type": "string"
+    },
+    "nextStepLink": {
+      "type": "string"
+    },
+    "startsAt": {
+      "type": "datetime"
+    },
+    "joinInfo": {
+      "type": "string",
+      "help": "How they join, or that the link comes by email"
+    },
+    "reminderNote": {
+      "type": "string"
+    }
+  }
+}

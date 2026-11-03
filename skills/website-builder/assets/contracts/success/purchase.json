@@ -1,0 +1,48 @@
+{
+  "id": "purchase",
+  "label": "Purchase",
+  "usedWhen": "A product, course or paid offer was bought; the checkout redirects here",
+  "urlPattern": "/thanks/{slug}/",
+  "indexing": "noindex; never in sitemap, llms.txt, archives or the footer",
+  "mustShow": [
+    "thank-you and what they bought",
+    "how to access it right now",
+    "support contact",
+    "one next step (onboarding, community)"
+  ],
+  "nextStep": "one next step, marked data-cta",
+  "tracking": "The success page view is the conversion. Fire ad pixels and analytics goals here.",
+  "fields": {
+    "title": {
+      "type": "string",
+      "max": 65
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "Confirms it worked, in plain words"
+    },
+    "message": {
+      "type": "string",
+      "max": 240,
+      "help": "One or two sentences: what just happened"
+    },
+    "nextStepCta": {
+      "type": "string",
+      "max": 40
+    },
+    "nextStepGoal": {
+      "type": "string"
+    },
+    "nextStepLink": {
+      "type": "string"
+    },
+    "accessInstructions": {
+      "type": "list",
+      "min": 2
+    },
+    "supportEmail": {
+      "type": "string"
+    }
+  }
+}

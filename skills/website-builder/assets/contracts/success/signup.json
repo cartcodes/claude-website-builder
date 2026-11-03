@@ -1,0 +1,49 @@
+{
+  "id": "signup",
+  "label": "Signup",
+  "usedWhen": "Joined a newsletter, community or waitlist",
+  "urlPattern": "/thanks/{slug}/",
+  "indexing": "noindex; never in sitemap, llms.txt, archives or the footer",
+  "mustShow": [
+    "confirmation",
+    "what to expect and how often",
+    "check-your-inbox note if double opt-in",
+    "one next step"
+  ],
+  "nextStep": "one next step, marked data-cta",
+  "tracking": "The success page view is the conversion. Fire ad pixels and analytics goals here.",
+  "fields": {
+    "title": {
+      "type": "string",
+      "max": 65
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "Confirms it worked, in plain words"
+    },
+    "message": {
+      "type": "string",
+      "max": 240,
+      "help": "One or two sentences: what just happened"
+    },
+    "nextStepCta": {
+      "type": "string",
+      "max": 40
+    },
+    "nextStepGoal": {
+      "type": "string"
+    },
+    "nextStepLink": {
+      "type": "string"
+    },
+    "whatToExpect": {
+      "type": "list",
+      "min": 1
+    },
+    "confirmEmail": {
+      "type": "boolean",
+      "help": "true if they must click a confirmation email"
+    }
+  }
+}

@@ -1,0 +1,51 @@
+{
+  "id": "copy-paste",
+  "label": "Copy and paste delivery",
+  "usedWhen": "A prompt, script, template or snippet was requested",
+  "urlPattern": "/thanks/{slug}/",
+  "indexing": "noindex; never in sitemap, llms.txt, archives or the footer",
+  "mustShow": [
+    "the full text in the HTML inside an element with data-copy",
+    "a copy button",
+    "how to use it, step by step",
+    "one next step"
+  ],
+  "nextStep": "one next step, marked data-cta",
+  "tracking": "The success page view is the conversion. Fire ad pixels and analytics goals here.",
+  "fields": {
+    "title": {
+      "type": "string",
+      "max": 65
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "Confirms it worked, in plain words"
+    },
+    "message": {
+      "type": "string",
+      "max": 240,
+      "help": "One or two sentences: what just happened"
+    },
+    "nextStepCta": {
+      "type": "string",
+      "max": 40
+    },
+    "nextStepGoal": {
+      "type": "string"
+    },
+    "nextStepLink": {
+      "type": "string"
+    },
+    "copyText": {
+      "type": "text"
+    },
+    "howToUse": {
+      "type": "list",
+      "min": 2
+    },
+    "emailed": {
+      "type": "boolean"
+    }
+  }
+}

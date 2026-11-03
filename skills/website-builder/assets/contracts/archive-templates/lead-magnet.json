@@ -1,0 +1,155 @@
+{
+  "template": "lead-magnet",
+  "id": "SET-PER-BUSINESS",
+  "label": "Free resources",
+  "path": "SET-PER-BUSINESS",
+  "pathOptions": [
+    "/free/",
+    "/guides/",
+    "/templates/",
+    "/prompts/",
+    "/tools/",
+    "/resources/"
+  ],
+  "itemNoun": "free resource",
+  "purpose": "One landing page per thing given away: guide, checklist, template, prompt, script, calculator, swipe file",
+  "role": "resource",
+  "roleNote": "search = built to rank and be quoted by AI: passes the keyword gate, full SEO/AEO/GEO. resource = reached from content, social posts or email: shows exactly what the visitor gets, no keyword gate, lighter word count, preview required. both = a resource that also passed the keyword gate.",
+  "fitsBusinessModels": [
+    "almost every business"
+  ],
+  "trafficSources": [
+    "search",
+    "social posts",
+    "ads",
+    "email"
+  ],
+  "parentArchive": null,
+  "goal": {
+    "defaultGoal": "{slug}",
+    "defaultSuccess": "file-delivery",
+    "note": "Pages that share a goal share one success page. {slug} gives each page its own."
+  },
+  "schemaType": "DigitalDocument",
+  "minWords": 120,
+  "footerLinks": 4,
+  "fields": {
+    "title": {
+      "type": "string",
+      "min": 25,
+      "max": 65,
+      "help": "Main keyword first, then the business name"
+    },
+    "description": {
+      "type": "string",
+      "min": 70,
+      "max": 160,
+      "help": "What the page offers, one proof point, the action"
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "The visitor's problem or outcome, with the main keyword"
+    },
+    "keyword": {
+      "type": "string",
+      "optional": true,
+      "help": "Only if role is search or both"
+    },
+    "secondaryKeywords": {
+      "type": "list",
+      "min": 0
+    },
+    "subtext": {
+      "type": "string",
+      "max": 180,
+      "help": "Two lines max: who it is for + the strongest proof"
+    },
+    "goal": {
+      "type": "string",
+      "help": "The one conversion goal id. Used in data-cta and names the success page"
+    },
+    "cta": {
+      "type": "string",
+      "max": 40,
+      "help": "Button text that says what they get"
+    },
+    "success": {
+      "type": "ref",
+      "to": "success",
+      "help": "The success page this goal ends on (usually the same as goal)"
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "min": 2
+    },
+    "faqs": {
+      "type": "faqs",
+      "min": 0
+    },
+    "updated": {
+      "type": "date"
+    },
+    "image": {
+      "type": "string",
+      "optional": true,
+      "help": "A real photo in src/assets"
+    },
+    "socialHook": {
+      "type": "string",
+      "optional": true,
+      "help": "The phrase social posts use to send people here (for example: comment GUIDE)"
+    },
+    "deliveryType": {
+      "type": "enum",
+      "values": [
+        "file",
+        "copy",
+        "open"
+      ],
+      "help": "file = download, copy = text to copy, open = shown on this page"
+    },
+    "gated": {
+      "type": "boolean",
+      "help": "true = ask for an email first and deliver on the success page"
+    },
+    "whatsInside": {
+      "type": "list",
+      "min": 3,
+      "help": "Specific contents, with numbers"
+    },
+    "whoItsFor": {
+      "type": "string"
+    },
+    "file": {
+      "type": "string",
+      "requiredIf": {
+        "deliveryType": "file"
+      },
+      "help": "The file in public/downloads/"
+    },
+    "copyText": {
+      "type": "text",
+      "requiredIf": {
+        "deliveryType": "copy"
+      }
+    },
+    "demandEvidence": {
+      "type": "string",
+      "optional": true,
+      "help": "If it targets a search, the evidence from keyword research"
+    },
+    "preview": {
+      "type": "string",
+      "help": "What they get, shown on the page: an image of the resource, a sample excerpt, or the agenda"
+    }
+  },
+  "sections": [
+    "preview of what they get",
+    "what's inside, specifically",
+    "who it's for",
+    "proof",
+    "call to action again",
+    "more like this"
+  ]
+}

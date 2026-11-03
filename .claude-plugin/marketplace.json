@@ -1,0 +1,14 @@
+{
+  "name": "ai-foundations",
+  "description": "AI Foundations tools for Claude Code: build and grow a lead-generation website with SEO and AI search built in.",
+  "owner": {
+    "name": "AI Foundations"
+  },
+  "plugins": [
+    {
+      "name": "website-builder",
+      "source": "./",
+      "description": "Build, grow and check a fast lead-generation website with Claude Code, with SEO, AI search and keyword research built in."
+    }
+  ]
+}

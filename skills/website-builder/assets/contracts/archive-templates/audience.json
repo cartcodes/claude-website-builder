@@ -1,0 +1,131 @@
+{
+  "template": "audience",
+  "id": "SET-PER-BUSINESS",
+  "label": "Who it's for",
+  "path": "SET-PER-BUSINESS",
+  "pathOptions": [
+    "/for/",
+    "/industries/",
+    "/who-we-help/",
+    "/use-cases/"
+  ],
+  "itemNoun": "audience",
+  "purpose": "One landing page per audience, industry, role or use case",
+  "role": "search",
+  "roleNote": "search = built to rank and be quoted by AI: passes the keyword gate, full SEO/AEO/GEO. resource = reached from content, social posts or email: shows exactly what the visitor gets, no keyword gate, lighter word count, preview required. both = a resource that also passed the keyword gate.",
+  "fitsBusinessModels": [
+    "consultants",
+    "agencies",
+    "coaches",
+    "B2B services",
+    "software"
+  ],
+  "trafficSources": [
+    "search",
+    "social",
+    "outbound",
+    "ads"
+  ],
+  "parentArchive": null,
+  "goal": {
+    "defaultGoal": "{shared}",
+    "defaultSuccess": "booked-call",
+    "note": "Pages that share a goal share one success page. {slug} gives each page its own."
+  },
+  "schemaType": "Service",
+  "minWords": 350,
+  "footerLinks": 8,
+  "fields": {
+    "title": {
+      "type": "string",
+      "min": 25,
+      "max": 65,
+      "help": "Main keyword first, then the business name"
+    },
+    "description": {
+      "type": "string",
+      "min": 70,
+      "max": 160,
+      "help": "What the page offers, one proof point, the action"
+    },
+    "h1": {
+      "type": "string",
+      "max": 80,
+      "help": "The visitor's problem or outcome, with the main keyword"
+    },
+    "keyword": {
+      "type": "string",
+      "help": "Main keyword for this page, from research/keywords.csv"
+    },
+    "secondaryKeywords": {
+      "type": "list",
+      "min": 0
+    },
+    "subtext": {
+      "type": "string",
+      "max": 180,
+      "help": "Two lines max: who it is for + the strongest proof"
+    },
+    "goal": {
+      "type": "string",
+      "help": "The one conversion goal id. Used in data-cta and names the success page"
+    },
+    "cta": {
+      "type": "string",
+      "max": 40,
+      "help": "Button text that says what they get"
+    },
+    "success": {
+      "type": "ref",
+      "to": "success",
+      "help": "The success page this goal ends on (usually the same as goal)"
+    },
+    "testimonials": {
+      "type": "testimonials",
+      "min": 2
+    },
+    "faqs": {
+      "type": "faqs",
+      "min": 3
+    },
+    "updated": {
+      "type": "date"
+    },
+    "image": {
+      "type": "string",
+      "optional": true,
+      "help": "A real photo in src/assets"
+    },
+    "socialHook": {
+      "type": "string",
+      "optional": true,
+      "help": "The phrase social posts use to send people here (for example: comment GUIDE)"
+    },
+    "audience": {
+      "type": "string"
+    },
+    "painPoints": {
+      "type": "list",
+      "min": 2,
+      "help": "Their problems, in their words"
+    },
+    "proofForAudience": {
+      "type": "list",
+      "min": 1,
+      "help": "Results for this exact audience: names, numbers"
+    },
+    "demandEvidence": {
+      "type": "string",
+      "help": "One line from research/keywords.csv: volume and source, or the buying signals seen in the results"
+    }
+  },
+  "sections": [
+    "their problem in their words",
+    "what changes for them",
+    "proof from this audience",
+    "how it works",
+    "faqs",
+    "call to action again",
+    "related audiences"
+  ]
+}
