@@ -55,17 +55,12 @@ Save the decision per place in `research/places.csv` (`page_level`: own page / c
 
 ## Step 3: Get real demand numbers
 
-Use the best source available. Ask the person which they have, easiest first.
+Use the best source the person already has, free ones first. This skill never handles passwords, API keys or tokens itself.
 
-1. **DataForSEO** (pay as you go; a small business's full list usually costs a few dollars). They create an account at dataforseo.com, add the minimum credit, and paste their API login and password into the `.env` file you open for them (`DATAFORSEO_LOGIN=` and `DATAFORSEO_PASSWORD=`), never into the chat. Then use HTTP basic auth to call:
-   - `POST https://api.dataforseo.com/v3/keywords_data/google_ads/search_volume/live`: monthly volume, CPC and Google Ads competition for up to 1,000 keywords per call. Set `location_name` (or `location_code`) to the most specific location the data supports.
-   - `POST https://api.dataforseo.com/v3/dataforseo_labs/google/keyword_suggestions/live`: more real phrasings from a seed.
-   - `POST https://api.dataforseo.com/v3/dataforseo_labs/google/bulk_keyword_difficulty/live`: difficulty 0-100.
-   - `POST https://api.dataforseo.com/v3/serp/google/organic/live/advanced`: the actual results for a keyword in a location, including map listings, ads and "People also ask".
-   Show the person the cost estimate before running a large batch.
-2. **Google Keyword Planner** (free with a Google Ads account; no ads need to run). Walk them through it: ads.google.com, Tools, Keyword Planner, "Get search volume and forecasts", paste the list you give them, set the location, download the CSV, and drop it into the project folder. Volumes appear as ranges unless they spend on ads. Ranges are still real data.
-3. **Bing Webmaster Tools, Keyword Research** (free once the site is verified). Real Bing numbers. Bing also feeds ChatGPT search and Copilot.
-4. **Google Search Console** (free, after launch). The queries the site already appears for. This is the best source for choosing the next pages. Check it monthly.
+1. **Google Keyword Planner** (free with a Google Ads account; no ads need to run). Walk them through it: ads.google.com, Tools, Keyword Planner, "Get search volume and forecasts", paste the list you give them, set the location, download the CSV, and drop it into the project folder. Volumes appear as ranges unless they spend on ads. Ranges are still real data.
+2. **Google Search Console** (free, after launch). The queries the site already appears for. This is the best source for choosing the next pages. They export the Performance report (Export, CSV) into the project folder, or connect Search Console to Claude themselves. Check it monthly.
+3. **Bing Webmaster Tools, Keyword Research** (free once the site is verified). Real Bing numbers, exported as CSV. Bing also feeds ChatGPT search and Copilot.
+4. **Optional: a paid keyword tool the person already uses or chooses to add.** DataForSEO (pay as you go, usually a few dollars for a small business's whole list), Semrush or Ahrefs. Either the person connects that tool to Claude through its own connector (they sign in to it themselves; you never see their login), or they export the tool's keyword report as CSV into the project folder. With DataForSEO, the useful reports are Google Ads search volume, keyword suggestions, keyword difficulty, and live search results for a location. Show the cost before running a large batch through a paid connector. None of this is required.
 5. **No data source yet.** Do not guess. Use only the evidence in Step 4, mark demand "unverified", build only the core pages, and hold narrower pages (offering-in-place, small places) until there is data.
 
 Small numbers are normal for specific searches. Tools often report 0-10 for a narrow `[offering] [place]` even when people search it. Treat those as long-tail members of a bigger cluster. A narrow page can still be worth building if Step 4 shows clear buying signals and the parent search has real volume. Write the reasoning down.

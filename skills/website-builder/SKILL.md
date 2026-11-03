@@ -25,7 +25,7 @@ The site grows by adding landing pages, never by adding menu items. Every page f
 
 - One step at a time. Plain words. Wait for "done" before the next step.
 - When they must click something, say exactly what the button says and where it is on screen.
-- Never ask them to paste passwords, API keys or tokens into the chat. If a key is needed, create a file called `.env` in the project, open it for them, and have them paste it there and save.
+- Never handle passwords, API keys or tokens. Never ask for them in the chat, and never read them from files or the computer. Services that need a login are connected by the person themselves: Cloudflare through its browser login, other tools through their own Claude connectors or CSV exports.
 - Ask before anything that costs money, changes a domain, or deletes something.
 - After each step, say what you did in one sentence. No jargon.
 - Show, don't describe: start the local preview and give them the link whenever there is something to see.
@@ -63,7 +63,7 @@ Save everything in `content/business.yaml`, `content/offers.md` and `content/not
 
 ## Phase 3: Set up and connect Cloudflare
 
-Follow `references/cloudflare-setup.md`: Node (if missing), a free Cloudflare account, `npx wrangler login`, then `npx wrangler whoami` to confirm.
+Follow `references/cloudflare-setup.md`: Node (if missing), a free Cloudflare account, Wrangler installed into the site at a fixed version, `npm run cf:login`, then `npm run cf:whoami` to confirm.
 
 ## Phase 4: Keyword research, place discovery and page plan
 
@@ -106,7 +106,7 @@ Follow `references/copywriting.md` and `references/conversion.md`: problem-aware
 ## Phase 9: Publish
 
 1. Show the local preview and wait for their okay.
-2. `npm run check`, then `npx wrangler pages deploy dist` (first time: create the project as in the setup guide).
+2. `npm run deploy` (it runs the checks first; the first time, create the project as in the setup guide).
 3. Give them the live link, then open each archive, one landing page with its success page, `/sitemap-index.xml` and `/llms.txt`.
 4. Offer to connect their own domain (setup guide, Part 5). Indexing needs the final domain, so do this before phase 10 if they want one.
 5. After publishing, run the live speed check in `references/technical-seo.md`.

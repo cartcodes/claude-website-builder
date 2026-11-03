@@ -52,8 +52,8 @@ The plugin is one skill (instructions plus three small, readable Node.js scripts
 
 When you use it, Claude may, with your approval at each step:
 - **Run on your computer:** `node` (the three scripts in `scripts/`, which only read and write files in your website folder), `npm` to install Astro, Tailwind and Wrangler into your website folder, `astro build`, and `curl` to check your own live pages.
-- **Connect to Cloudflare** with your own account via `npx wrangler login`, to publish your site to Cloudflare Pages.
-- **Send keyword lists to DataForSEO** (optional, only if you create your own DataForSEO account). Your login lives in a local `.env` file, never in the chat.
+- **Connect to Cloudflare** with your own account through Cloudflare's own browser login (Wrangler, installed into your website folder at a fixed version), to publish your site to Cloudflare Pages.
+- **Never handle your passwords or API keys.** Keyword data comes from free CSV exports (Google Keyword Planner, Search Console, Bing Webmaster Tools), or optionally from a paid keyword tool such as DataForSEO, Semrush or Ahrefs that you connect to Claude yourself.
 - **Fetch public pages:** Google PageSpeed Insights for your site's URLs, search results and competitor pages for keyword research, and `api.indexnow.org` to tell Bing about new pages (optional).
 - **Read files you choose to provide**, such as a customer export used to find where you really work. It stays on your computer and is never published.
 

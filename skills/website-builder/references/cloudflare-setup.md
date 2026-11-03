@@ -12,6 +12,13 @@ Give the person one step at a time and wait for "done". Check each step worked y
      3. "Open the file that downloads and click Continue / Next until it says it's finished. Use all the default options."
      4. "Tell me done." Then run `node -v` again to confirm. If the terminal still cannot find it, ask them to quit and reopen Claude Code once.
 2. Create the project folder (for example `~/Websites/<business-name>`) and set up Astro + Tailwind inside it yourself. The person does not need to do anything here.
+3. Install Cloudflare's publishing tool, Wrangler, into the site at a fixed version, so it never downloads anything new when it runs: `npm install --save-dev --save-exact wrangler`. Then add these scripts to `package.json`:
+   ```json
+   "cf:login": "wrangler login",
+   "cf:whoami": "wrangler whoami",
+   "cf:create": "wrangler pages project create",
+   "deploy": "npm run check && wrangler pages deploy dist"
+   ```
 
 ## Part 2: The Cloudflare account
 
@@ -30,8 +37,8 @@ Go straight to Part 3.
 ## Part 3: Connect Claude Code to Cloudflare
 
 1. Say: "I'm going to connect to your Cloudflare account. A browser window will open. Make sure you are logged in to Cloudflare, then click the blue **Allow** button. Come back here and tell me done."
-2. Run `npx wrangler login`. (If asked to install wrangler, answer yes.)
-3. When they say done, run `npx wrangler whoami` and tell them in one sentence which account you are connected to.
+2. Run `npm run cf:login`.
+3. When they say done, run `npm run cf:whoami` and tell them in one sentence which account you are connected to.
 4. If the browser did not open, give them the link that wrangler printed and ask them to open it.
 5. If it fails because they are logged in to the wrong account in the browser, ask them to log out of Cloudflare in the browser, log in to the right one, and repeat step 2.
 
@@ -40,8 +47,8 @@ Nothing secret was pasted anywhere. The login is saved on their computer by wran
 ## Part 4: First publish (free web address)
 
 1. Build and check: `npm run check`.
-2. Create the project once: `npx wrangler pages project create <business-name> --production-branch main`.
-3. Publish: `npx wrangler pages deploy dist --project-name <business-name>`.
+2. Create the project once: `npm run cf:create -- <business-name> --production-branch main`.
+3. Publish: `npm run deploy -- --project-name <business-name>`.
 4. Give them the live link (`https://<business-name>.pages.dev`) and open it for them.
 5. Every later publish is just step 1 and step 3.
 
