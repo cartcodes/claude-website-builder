@@ -1,15 +1,19 @@
 #!/usr/bin/env node
 // check-site.mjs: one command that checks every built page for SEO, AI search
 // (GEO/AEO), page speed budget, site structure and copy quality.
-// Usage: node scripts/check-site.mjs [dist-folder] [--site https://example.com]
+// Usage: node scripts/check-site.mjs [built-html-folder] [--site https://example.com] [--freeform]
+// Works on the HTML output of any stack (dist, out, build, _site, public, or a folder
+// saved by fetch-site.mjs). --freeform turns layout conventions (footer archive links,
+// one goal per page, success pages, breadcrumbs) into suggestions instead of failures.
 // No dependencies. Exits 1 if anything FAILS, so it can gate every publish.
 
 import fs from 'node:fs';
 import path from 'node:path';
 
 const args = process.argv.slice(2);
-const DIST = path.resolve(args.find(a => !a.startsWith('--')) || 'dist');
+const DIST = path.resolve(args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--site') || 'dist');
 const siteArg = args.includes('--site') ? args[args.indexOf('--site') + 1] : null;
+const FREEFORM = args.includes('--freeform');
 
 // Budgets. Change them here if a page legitimately needs more.
 const BUDGET = {
@@ -46,6 +50,8 @@ const BANNED_PHRASES = [/in today'?s (fast-paced|digital|modern|ever)/i, /ever-e
 const results = []; // {level, page, msg}
 const fail = (page, msg) => results.push({ level: 'FAIL', page, msg });
 const warn = (page, msg) => results.push({ level: 'WARN', page, msg });
+// Layout conventions: must-fix in the interview build, suggestions in freeform.
+const conv = (page, msg) => (FREEFORM ? warn : fail)(page, msg);
 
 if (!fs.existsSync(DIST)) { console.error(`No build folder at ${DIST}. Run the build first.`); process.exit(1); }
 
@@ -140,7 +146,7 @@ for (const p of pages) {
     if (!stype) warn(url, 'Add <meta name="success-type" content="<contract id>"> so the right delivery checks run.');
     const body = html.replace(/<footer[\s\S]*?<\/footer>/i, '');
     const next = new Set([...body.matchAll(/data-cta\s*=\s*["']([^"']+)["']/gi)].map(m => m[1]));
-    if (next.size > 1) fail(url, `Success page offers ${next.size} next steps (${[...next].join(', ')}). Give it exactly one.`);
+    if (next.size > 1) conv(url, `Success page offers ${next.size} next steps (${[...next].join(', ')}). Give it exactly one.`);
     if (!next.size) warn(url, 'Success page has no next step marked data-cta. Offer exactly one.');
     if (stype === 'file-delivery' && !/<a\b[^>]*(\sdownload\b|href=["'][^"']+\.(pdf|zip|docx?|xlsx?|csv|pptx?|png|jpe?g|txt|md|json)["'])/i.test(body)) fail(url, 'File delivery page has no download link (an <a download> pointing to the file).');
     if (stype === 'file-delivery') for (const m of body.matchAll(/<a\b[^>]*href=["'](\/[^"']+\.[a-z0-9]{2,5})["']/gi)) if (!assetExists(m[1])) fail(url, `Download file is missing: ${m[1]}`);
@@ -189,7 +195,7 @@ for (const p of pages) {
   }
   p.types = types;
   if (!types.size) fail(url, 'No structured data (JSON-LD).');
-  if (type !== 'home' && !types.has('BreadcrumbList')) fail(url, 'Missing BreadcrumbList structured data.');
+  if (type !== 'home' && !types.has('BreadcrumbList')) conv(url, 'Missing BreadcrumbList structured data.');
   if (type === 'home' && !([...types].some(t => /Organization|LocalBusiness|Contractor|Service$/.test(t)) || types.has('Organization'))) warn(url, 'Home page should describe the business (Organization or LocalBusiness).');
   if (type === 'landing' && ![...types].some(t => !['BreadcrumbList', 'FAQPage', 'WebPage', 'WebSite', 'Organization', 'ListItem'].includes(t))) warn(url, 'Describe what this page offers in structured data (Service, Product, Event, Course, DigitalDocument...).');
   const hasFaqHtml = /<h[23][^>]*>[^<]*\?\s*<\/h[23]>/i.test(html);
@@ -238,10 +244,10 @@ for (const p of pages) {
     else if (!assetExists(clean)) fail(url, `Broken internal link: ${h}`);
   }
   const footer = (html.match(/<footer[\s\S]*?<\/footer>/i) || [''])[0];
-  if (!footer) fail(url, 'No <footer>. The footer is where every archive link lives.');
-  else if (/href=["'][^"']*\/thanks\//i.test(footer)) fail(url, 'Footer links to a success page. Success pages are only reached by converting.');
+  if (!footer) conv(url, 'No <footer>. The footer is where every archive link lives.');
+  else if (/href=["'][^"']*\/thanks\//i.test(footer)) conv(url, 'Footer links to a success page. Success pages are only reached by converting.');
   else for (const a of archives)
-    if (!footer.includes(`href="${a}"`) && !footer.includes(`href="${SITE}${a}"`)) fail(url, `Footer does not link to the ${a} archive.`);
+    if (!footer.includes(`href="${a}"`) && !footer.includes(`href="${SITE}${a}"`)) conv(url, `Footer does not link to the ${a} archive.`);
 
   // One conversion goal per page. Mark every call-to-action button, link and
   // form with data-cta="<goal>" (for example data-cta="free-quote").
@@ -250,9 +256,9 @@ for (const p of pages) {
     const goals = new Set([...body.matchAll(/data-cta\s*=\s*["']([^"']+)["']/gi)].map(m => m[1].trim().toLowerCase()));
     const succ = new Set([...body.matchAll(/data-success\s*=\s*["']([^"']+)["']/gi)].map(m => m[1].trim()));
     if (goals.size && !succ.size) warn(url, 'Call to action has no data-success="/thanks/<goal>/". Every goal should end on its success page.');
-    for (const sp of succ) if (sp.startsWith('/') && !existing.has(sp.endsWith('/') ? sp : sp + '/')) fail(url, `Success page ${sp} does not exist.`);
+    for (const sp of succ) if (sp.startsWith('/') && !existing.has(sp.endsWith('/') ? sp : sp + '/')) conv(url, `Success page ${sp} does not exist.`);
     if (!goals.size) warn(url, 'No call to action marked with data-cta="<goal>". Every landing page needs one clear conversion goal.');
-    else if (goals.size > 1) fail(url, `More than one conversion goal on this page (${[...goals].join(', ')}). Give each landing page one goal and move the others to their own pages.`);
+    else if (goals.size > 1) conv(url, `More than one conversion goal on this page (${[...goals].join(', ')}). Give each landing page one goal and move the others to their own pages.`);
     const forms = new Set([...((body.match(/<main[\s\S]*?<\/main>/i) || [''])[0]).matchAll(/<form\b[^>]*>/gi)].map(m => attr(m[0], 'action') || attr(m[0], 'data-cta') || 'inline'));
     if (forms.size > 1) warn(url, `Has ${forms.size} different forms. One page, one form, one goal.`);
     for (const m of ((body.match(/<main[\s\S]*?<\/main>/i) || [''])[0]).matchAll(/<form\b[\s\S]*?<\/form>/gi)) {
@@ -284,7 +290,7 @@ for (const p of pages) {
 }
 
 // Orphans: every page needs at least one link from another page
-for (const p of pages) if (p.url !== '/' && !inbound.get(p.url) && p.type !== 'other' && p.type !== 'success') fail(p.url, 'Orphan page: no other page links to it (add it to its archive).');
+for (const p of pages) if (p.url !== '/' && !inbound.get(p.url) && p.type !== 'other' && p.type !== 'success') conv(p.url, 'Orphan page: no other page links to it (add it to its archive).');
 
 // Duplicate titles, descriptions, H1s
 for (const key of ['title', 'desc', 'h1']) {
@@ -309,6 +315,6 @@ console.log(`\nChecked ${pages.length} pages in ${path.relative(process.cwd(), D
 for (const r of results) console.log(`${r.level === 'FAIL' ? 'FAIL' : 'warn'}  ${r.page.padEnd(38)} ${r.msg}`);
 const byType = pages.reduce((m, p) => (m[p.type] = (m[p.type] || 0) + 1, m), {});
 console.log(`\nPages by type: ${Object.entries(byType).map(([k, v]) => `${k} ${v}`).join(', ')}`);
-console.log(fails ? `\n${fails} must-fix problem(s), ${warns} suggestion(s). Fix the FAIL lines before publishing.\n`
+console.log(fails ? `\n${fails} must-fix problem(s), ${warns} suggestion(s). ${FREEFORM ? 'Fixing the FAIL lines is strongly recommended.' : 'Fix the FAIL lines before publishing.'}\n`
   : `\nNo must-fix problems. ${warns} suggestion(s).\n`);
 process.exit(fails ? 1 : 0);

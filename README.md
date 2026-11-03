@@ -12,6 +12,12 @@ Claude builds and grows a fast website whose pages are made to turn visitors int
 - **Free hosting on Cloudflare**, set up step by step, even if you've never made an account.
 - **Contracts and a checker.** Every new page must meet the same standard before it can go live, so adding pages later (by you or a scheduled Claude routine) is quick and safe.
 
+## Two ways to work
+
+When you start, Claude asks how you'd like to work:
+- **Normal interview.** Claude guides you step by step and builds the whole system above, hosted free on Cloudflare.
+- **Freeform.** You say what you want and Claude builds it your way, on any setup and any host (WordPress, Webflow, Shopify, Squarespace, Wix, Next.js, plain HTML, Vercel, Netlify, your own server and more). It still uses the same copywriting, conversion, SEO and AI-search habits, without pushing back or putting you on a track.
+
 ## Install (2 minutes)
 
 You need Claude Code. If you don't have it yet, install it from claude.com/claude-code first.
@@ -48,11 +54,11 @@ You can also type `/website-builder` to start it directly.
 
 ## What this plugin runs, sends and fetches
 
-The plugin is one skill (instructions plus three small, readable Node.js scripts). It has no hooks, no MCP servers, no background processes and no telemetry. Nothing is ever sent to AI Foundations.
+The plugin is one skill (instructions plus four small, readable Node.js scripts). It has no hooks, no MCP servers, no background processes and no telemetry. Nothing is ever sent to AI Foundations.
 
 When you use it, Claude may, with your approval at each step:
-- **Run on your computer:** `node` (the three scripts in `scripts/`, which only read and write files in your website folder), `npm` to install Astro, Tailwind and Wrangler into your website folder, `astro build`, and `curl` to check your own live pages.
-- **Connect to Cloudflare** with your own account through Cloudflare's own browser login (Wrangler, installed into your website folder at a fixed version), to publish your site to Cloudflare Pages.
+- **Run on your computer:** `node` (the scripts in `scripts/`, which only read and write files in your website folder, except `fetch-site.mjs`, which downloads your own site's public pages so they can be checked), `npm` to install Astro, Tailwind and Wrangler into your website folder, `astro build`, and `curl` to check your own live pages.
+- **Publish through the host you choose**, using that host's own sign-in. By default this is Cloudflare, through Cloudflare's own browser login (Wrangler, installed into your website folder at a fixed version), to publish your site to Cloudflare Pages.
 - **Never handle your passwords or API keys.** Keyword data comes from free CSV exports (Google Keyword Planner, Search Console, Bing Webmaster Tools), or optionally from a paid keyword tool such as DataForSEO, Semrush or Ahrefs that you connect to Claude yourself.
 - **Fetch public pages:** Google PageSpeed Insights for your site's URLs, search results and competitor pages for keyword research, and `api.indexnow.org` to tell Bing about new pages (optional).
 - **Read files you choose to provide**, such as a customer export used to find where you really work. It stays on your computer and is never published.
@@ -75,11 +81,13 @@ skills/website-builder/
     technical-seo.md               metadata, structured data, speed budgets, the checks
     indexing.md                    getting indexed in Google and Bing, step by step
     cloudflare-setup.md            account, connection, publishing, your own domain
+    any-stack.md                   freeform mode: the same conventions on any stack and host
   assets/contracts/
     archive-templates/             place, offering, offering-in-place, audience, comparison, lead-magnet, event
     success/                       booked-call, form-submitted, file-delivery, copy-paste, registration, quiz-result, purchase, signup
   scripts/
     contracts.mjs                  turns contracts into build rules, and checks content files
     new-page.mjs                   creates a new page (and its success page) from a contract
-    check-site.mjs                 the checker that runs before every publish
+    check-site.mjs                 the checker that runs before every publish (any stack)
+    fetch-site.mjs                 saves a live site's public pages so the checker can read them
 ```

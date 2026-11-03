@@ -1,6 +1,6 @@
 ---
 name: website-builder
-description: Build, grow and check a fast lead-generation website for any business, run by Claude Code for a non-technical owner. The site is a set of landing pages, each with one conversion goal and everything important on the first screen, grouped into footer-linked archives chosen for that business (places served, offerings, audiences, comparisons, lead magnets, events, or anything else it gives away or sells). Every page and every success action (booked call, submitted form, file download, copy-and-paste delivery, registration, purchase, quiz result, signup) follows a contract, so new pages can be added safely by a person or a scheduled Claude routine. Includes real keyword research backed by demand and competition data, granular service-area discovery, plain persuasive copy with no AI tells, full SEO plus GEO/AEO (AI search), indexing in Google and Bing, page-speed and quality checks, and free hosting on Cloudflare Pages. Use when someone wants a website or landing pages, wants to add any kind of landing page or archive, find keywords or places to target, improve SEO or AI visibility, get indexed, or check their site.
+description: Build, grow and check a fast lead-generation website for any business, run by Claude Code for a non-technical owner. The site is a set of landing pages, each with one conversion goal and everything important on the first screen, grouped into footer-linked archives chosen for that business (places served, offerings, audiences, comparisons, lead magnets, events, or anything else it gives away or sells). Every page and every success action (booked call, submitted form, file download, copy-and-paste delivery, registration, purchase, quiz result, signup) follows a contract, so new pages can be added safely by a person or a scheduled Claude routine. Includes real keyword research backed by demand and competition data, granular service-area discovery, plain persuasive copy with no AI tells, full SEO plus GEO/AEO (AI search), indexing in Google and Bing, page-speed and quality checks, and free hosting on Cloudflare Pages. Two ways to work: a guided Interview that builds the whole system, or Freeform, which applies the same copy, conversion, SEO and GEO/AEO conventions to whatever the person asks for, on any stack and any host (Next.js, WordPress, Webflow, Shopify, Squarespace, Wix, plain HTML, Vercel, Netlify and others), without pushing back. Use when someone wants a website or landing pages, wants to add any kind of landing page or archive, find keywords or places to target, improve SEO or AI visibility, get indexed, or check their site.
 ---
 
 # Website builder
@@ -8,6 +8,26 @@ description: Build, grow and check a fast lead-generation website for any busine
 This skill works for any business: a dentist, a law firm, a contractor, a coach, a software company, a bakery, a church, a course creator. Never assume a trade, a place, or a page type. Everything specific comes from the interview and from research. The examples in these files are examples, nothing more.
 
 The person is probably not technical. They answer questions, click buttons you describe, and approve what you show them. You do everything else.
+
+## Pick how to work (ask once, at the start)
+
+Unless the person's request already makes it obvious, ask with the AskUserQuestion tool (in plain words if that tool isn't available). Question: "How would you like to work?" Two options:
+
+1. **Normal interview.** "I'll guide you step by step: what your pages give away, keyword research, a full site with contracts and checks, published on Cloudflare for free."
+2. **Freeform.** "You tell me what you want and I build it your way, on any setup or host you choose. I still use good copywriting, conversion, SEO and AI-search habits, but I won't push back or put you on a track."
+
+Remember the answer in `content/notes.md` (or the project's notes file) so you don't ask again. The person can switch at any time by saying so.
+
+### Freeform mode
+
+Follow `references/any-stack.md`. In short:
+- **Their words decide.** Build what they ask, in the order they ask, on the stack, platform and host they name or already have. If they name none, pick something sensible for the job and say what you picked in one sentence. Don't run the interview, don't require contracts or archives, and don't argue with layout or design choices.
+- **The conventions are your defaults, not rules.** Write copy with `references/copywriting.md` (including the AI-tells sweep), shape pages with `references/conversion.md`, and apply `references/technical-seo.md`, `references/geo-aeo.md` and `references/indexing.md` wherever they fit. If a request clearly works against its own goal (two competing buttons, a blocked AI crawler, a page hidden from search), mention it once, in one sentence, then do it their way.
+- **Use any other reference when it helps** (keyword research, archives, success pages, contracts), and only when they ask for it or it plainly serves what they asked.
+- **Checks still run** where they can: point `scripts/check-site.mjs --freeform` at the site's built HTML folder, or fetch a live site first with `scripts/fetch-site.mjs`. In freeform, layout conventions show as suggestions, not failures.
+- **Still always:** the "How to work with the person" rules below, no invented facts, no handling of passwords or keys, and asking before anything that costs money, changes a domain or deletes something.
+
+Everything from "Choose the job" onward is the Normal interview. In Freeform, use those sections only as reference.
 
 ## The goal: convert the action
 
@@ -31,7 +51,7 @@ The site grows by adding landing pages, never by adding menu items. Every page f
 - Show, don't describe: start the local preview and give them the link whenever there is something to see.
 - Never invent facts: no made-up numbers, reviews, places, credentials or search volumes. If a fact is missing, ask.
 
-## Choose the mode
+## Choose the job (Normal interview)
 
 1. **Build a new site.** Every phase, in order.
 2. **Add a landing page** of any kind, in any existing archive. Follow "Adding a page" in `references/contracts.md`.
@@ -40,7 +60,7 @@ The site grows by adding landing pages, never by adding menu items. Every page f
 5. **Check, fix and index an existing site.** Phases 8, 9 and 10.
 6. **Set up a routine** that adds pages on a schedule. See "Routines" in `references/contracts.md`.
 
-## Phase 1: What will the pages give away? (always first)
+## Phase 1: What will the pages give away? (always first in the interview)
 
 Follow `references/offers-and-archives.md`:
 - Build the **offer inventory**: everything the business gives away or sells, and the one action each offer asks for.
@@ -126,11 +146,15 @@ Follow `references/indexing.md`: pre-flight checks, Google Search Console, Bing 
 
 ## Never
 
-- Assume the business has places, services, or any particular archive.
+In both modes:
 - Invent search volumes, reviews, testimonials, statistics, credentials, places or local details.
+- Handle passwords, API keys or tokens.
+- Block AI crawlers, or leave a host's AI-bot blocking on, without asking.
+
+In the Normal interview (in Freeform, mention these once if relevant, then follow the person):
+- Assume the business has places, services, or any particular archive.
 - Build two pages that only swap a place or offering name. The checker fails near-duplicates.
 - Put two conversion goals on one landing page, or add a top menu.
 - Hide content behind JavaScript, tabs that load text later, or client-side rendering. AI crawlers do not run JavaScript.
-- Block AI crawlers, or leave Cloudflare's AI-bot blocking on without asking.
 - Publish with a FAIL line, or with TODO left in any content file.
 - Use em dashes in site copy.
