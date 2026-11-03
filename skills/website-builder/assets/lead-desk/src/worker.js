@@ -391,7 +391,7 @@ export default {
     }
   },
 
-  // Daily at the hour set in wrangler.jsonc: send the summary if it is switched on.
+  // Daily at the hour set in wrangler.json: send the summary if it is switched on.
   async scheduled(event, bindings, ctx) {
     const db = bindings.DB;
     const st = await getSettings(db);

@@ -1,0 +1,30 @@
+{
+  "name": "lead-desk",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./public",
+    "binding": "ASSETS",
+    "run_worker_first": [
+      "/api/*"
+    ]
+  },
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "lead-desk",
+      "database_id": "FILL-IN-FROM-desk:db"
+    }
+  ],
+  "vars": {
+    "site_origins": ""
+  },
+  "triggers": {
+    "crons": [
+      "0 13 * * *"
+    ]
+  },
+  "observability": {
+    "enabled": true
+  }
+}

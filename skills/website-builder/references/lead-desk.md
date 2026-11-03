@@ -20,11 +20,11 @@ Give one step at a time and wait for "done". Everything below runs in a folder n
 
 1. **Copy the files.** Copy `assets/lead-desk/` from this skill into that folder. Then add Cloudflare's tool to it at a fixed version: `npm install --save-dev --save-exact wrangler`.
 2. **Connect to Cloudflare.** If the website is already on Cloudflare, this is already done. Otherwise follow `cloudflare-setup.md`, Parts 2 and 3, using `npm run desk:login` and `npm run desk:whoami`.
-3. **Create the database.** Run `npm run desk:db`. It prints a `database_id`. Put that value into `wrangler.jsonc` where it says `FILL-IN-FROM-desk:db`. The id is not secret. Then run `npm run desk:schema`.
-4. **Say which websites may send leads.** In `wrangler.jsonc`, set `site_origins` to the site's addresses separated by spaces, for example `"https://yourbusiness.com https://www.yourbusiness.com https://yourbusiness.pages.dev"`. The owner can change this later on the Settings page.
+3. **Create the database.** Run `npm run desk:db`. It prints a `database_id`. Put that value into `wrangler.json` where it says `FILL-IN-FROM-desk:db`. The id is not secret. Then run `npm run desk:schema`. The summary is checked daily at 13:00 UTC; change the hour in `triggers.crons` if they want.
+4. **Say which websites may send leads.** In `wrangler.json`, set `site_origins` to the site's addresses separated by spaces, for example `"https://yourbusiness.com https://www.yourbusiness.com https://yourbusiness.pages.dev"`. The owner can change this later on the Settings page.
 5. **Choose the address** (ask the person):
    - **Free address, nothing to set up:** the Lead Desk gets `https://lead-desk.<their-account>.workers.dev`. Fine to start with.
-   - **Their own domain, if it's on Cloudflare (recommended):** something like `leads.yourbusiness.com`. Uncomment the `routes` line in `wrangler.jsonc` and put in their real subdomain. Cloudflare creates the address and its security certificate on deploy. If the domain isn't on Cloudflare yet, `cloudflare-setup.md`, Part 5, moves it there for free.
+   - **Their own domain, if it's on Cloudflare (recommended):** something like `leads.yourbusiness.com`. Add `"routes": [{ "pattern": "leads.<their-domain>", "custom_domain": true }]` to `wrangler.json`, with their real subdomain. Cloudflare creates the address and its security certificate on deploy. If the domain isn't on Cloudflare yet, `cloudflare-setup.md`, Part 5, moves it there for free.
 6. **Publish.** Run `npm run desk:deploy`. It prints the address. Save it in `desk.json` as `{"address": "https://..."}`, so invite links come out complete.
 7. **Create the owner's account.** Run `npm run desk:invite -- <their email> --owner`. It prints a one-time link. Say: "Open this link, choose a password of at least 10 characters, and you're in. Then bookmark the page." You never see or type their password. The link works once, for 7 days.
 8. **Connect the forms** (next section), then send one test lead and show them it arriving.
@@ -76,7 +76,7 @@ The person pastes webhook links straight into their own Settings page. You never
 **Email alerts** (only with the domain on Cloudflare):
 1. "In Cloudflare, click your domain, then **Email**, then **Email Routing**, then **Get started** or **Enable**." Cloudflare adds the DNS records it needs. If the domain already receives email elsewhere (Google Workspace, Microsoft 365), stop and check with the person first: Email Routing changes where mail for the domain goes. In that case, use phone push or a webhook instead.
 2. "Under **Destination addresses**, add the email of each person who should get alerts. Cloudflare emails each of them a verify link. Click it." Cloudflare only delivers to verified addresses.
-3. In `wrangler.jsonc`, uncomment `"send_email": [{ "name": "MAILER" }]` and run `npm run desk:deploy`.
+3. Add `"send_email": [{ "name": "MAILER" }]` to `wrangler.json` and run `npm run desk:deploy`.
 4. "In your Lead Desk Settings, type a sending address on your domain, like `leads@yourbusiness.com`, turn email alerts on, save, and send a test alert."
 
 ## Looking after it
