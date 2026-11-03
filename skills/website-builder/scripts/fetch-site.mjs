@@ -28,7 +28,7 @@ if (args.includes('--speed')) {
   api.searchParams.set('url', start); api.searchParams.set('strategy', 'mobile');
   for (const c of ['performance', 'seo', 'accessibility', 'best-practices']) api.searchParams.append('category', c);
   const r = await fetch(api); const j = await r.json().catch(() => ({}));
-  if (!r.ok || !j.lighthouseResult) { console.log(`PageSpeed did not answer (${r.status}). If it says rate limited, wait a minute and try again.`); process.exit(1); }
+  if (!r.ok || !j.lighthouseResult) { console.log(`PageSpeed did not answer (${r.status}). If it says rate limited, wait a minute and try again, or open pagespeed.web.dev and paste the address.`); process.exit(1); }
   const cats = j.lighthouseResult.categories, au = j.lighthouseResult.audits;
   const score = k => Math.round((cats[k]?.score ?? 0) * 100);
   const field = j.loadingExperience?.metrics || {};

@@ -61,7 +61,7 @@ Run Google PageSpeed Insights for the home page and one page of each type (mobil
 ```
 node scripts/fetch-site.mjs <page address> --speed
 ```
-Report the four scores and LCP, INP and CLS in one line per page. Fix anything under 90. (No sign-up needed for occasional checks. If it rate-limits, wait a minute.)
+Report the four scores and LCP, INP and CLS in one line per page. Fix anything under 90. (No sign-up needed for occasional checks. If it rate-limits, wait a minute, or open pagespeed.web.dev in the browser and paste the address.)
 
 ### After the domain is live
 - Search Console: submit the sitemap and run URL Inspection on the home page and one page of each type.
