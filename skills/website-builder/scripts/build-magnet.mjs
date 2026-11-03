@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // build-magnet.mjs: turns one lead magnet's source into the files people download.
 // Source folder: lead-magnets/<slug>/ with magnet.md (front matter + Markdown body)
 // and any extra files to hand over (CSV templates, images, .ics).
@@ -9,7 +8,7 @@
 //   square.png    1080x1080 version for feeds and ads
 // --site <folder> also copies the PDF, the phone-friendly HTML and extras into <folder>/downloads/ and the
 // cover images into <folder>/images/lead-magnets/ (for Astro: --site public).
-// Usage: node scripts/build-magnet.mjs lead-magnets/<slug> [--site public] [--letter|--a4]
+// Usage: node scripts/build-magnet.mjs lead-magnets/<slug> [--site public] [--letter|--a4] [--browser <path>]
 // No dependencies. Works on macOS, Windows and Linux.
 
 import fs from 'node:fs';
@@ -19,7 +18,7 @@ import { spawn } from 'node:child_process';
 import { pathToFileURL } from 'node:url';
 
 const args = process.argv.slice(2);
-const SRC = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--site');
+const SRC = args.find((a, i) => !a.startsWith('--') && !['--site', '--browser'].includes(args[i - 1]));
 if (!SRC || !fs.existsSync(path.join(SRC, 'magnet.md'))) {
   console.error('Usage: node scripts/build-magnet.mjs lead-magnets/<slug> [--site public]\nThe folder needs a magnet.md file.');
   process.exit(1);
@@ -188,14 +187,17 @@ fs.writeFileSync(path.join(OUT, 'cover.html'), coverPage(1080, 1350));
 fs.writeFileSync(path.join(OUT, 'square.html'), coverPage(1080, 1080));
 
 // ---------- find a browser to print with ----------
+// The browser is found in its usual install folders, or given with --browser <path>.
 function findBrowser() {
-  if (process.env.CHROME_PATH && fs.existsSync(process.env.CHROME_PATH)) return process.env.CHROME_PATH;
+  const given = args.includes('--browser') ? args[args.indexOf('--browser') + 1] : null;
+  if (given && fs.existsSync(given)) return given;
+  const home = os.homedir();
   const c = {
     darwin: ['/Applications/Google Chrome.app/Contents/MacOS/Google Chrome', '/Applications/Microsoft Edge.app/Contents/MacOS/Microsoft Edge',
       '/Applications/Chromium.app/Contents/MacOS/Chromium', '/Applications/Brave Browser.app/Contents/MacOS/Brave Browser'],
-    win32: [`${process.env.PROGRAMFILES}\\Google\\Chrome\\Application\\chrome.exe`, `${process.env['PROGRAMFILES(X86)']}\\Google\\Chrome\\Application\\chrome.exe`,
-      `${process.env.LOCALAPPDATA}\\Google\\Chrome\\Application\\chrome.exe`, `${process.env['PROGRAMFILES(X86)']}\\Microsoft\\Edge\\Application\\msedge.exe`,
-      `${process.env.PROGRAMFILES}\\Microsoft\\Edge\\Application\\msedge.exe`],
+    win32: ['C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe', 'C:\\Program Files (x86)\\Google\\Chrome\\Application\\chrome.exe',
+      path.join(home, 'AppData', 'Local', 'Google', 'Chrome', 'Application', 'chrome.exe'),
+      'C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe', 'C:\\Program Files\\Microsoft\\Edge\\Application\\msedge.exe'],
     linux: ['/usr/bin/google-chrome', '/usr/bin/google-chrome-stable', '/usr/bin/chromium', '/usr/bin/chromium-browser', '/usr/bin/microsoft-edge', '/snap/bin/chromium'],
   }[process.platform] || [];
   return c.find(p => p && fs.existsSync(p));
@@ -234,7 +236,7 @@ if (browser) {
   finally { await new Promise(r => setTimeout(r, 500)); try { fs.rmSync(prof, { recursive: true, force: true, maxRetries: 5, retryDelay: 200 }); } catch {} }
 } else {
   console.log('No Chrome, Edge or Chromium found, so no PDF yet. Either install Google Chrome (free) and run this again,');
-  console.log(`or open ${htmlPath} in any browser and use Print > Save as PDF. Set CHROME_PATH if the browser is somewhere unusual.`);
+  console.log(`or open ${htmlPath} in any browser and use Print > Save as PDF. If the browser is somewhere unusual, add --browser <path to it>.`);
 }
 
 // Extra files handed over as they are (CSV templates, .ics, images, ready-made files).

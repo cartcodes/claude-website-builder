@@ -1,16 +1,16 @@
-#!/usr/bin/env node
 // fetch-site.mjs: saves a live site's public pages into a folder so check-site.mjs
 // can check sites that have no local build (WordPress, Webflow, Shopify, Squarespace,
 // Wix, a server-rendered app...). Reads robots.txt, llms.txt, 404 and the sitemap,
 // then every page the sitemap lists. Public pages only. No dependencies (Node 20+).
-// Usage: node scripts/fetch-site.mjs https://example.com [out-folder] [--max 300]
+// Usage: node scripts/fetch-site.mjs https://<your-domain> [out-folder] [--max 300]
+//        node scripts/fetch-site.mjs https://<your-domain>/page/ --bots   (can AI crawlers get this page?)
 
 import fs from 'node:fs';
 import path from 'node:path';
 
 const args = process.argv.slice(2);
 const start = args.find(a => /^https?:\/\//.test(a));
-if (!start) { console.error('Usage: node scripts/fetch-site.mjs https://example.com [out-folder] [--max 300]'); process.exit(1); }
+if (!start) { console.error('Usage: node scripts/fetch-site.mjs https://<your-domain> [out-folder] [--max 300]'); process.exit(1); }
 const ORIGIN = new URL(start).origin;
 const OUT = path.resolve(args.find(a => !a.startsWith('--') && a !== start && !/^\d+$/.test(a)) || 'site-snapshot');
 const MAX = args.includes('--max') ? Number(args[args.indexOf('--max') + 1]) : 300;
@@ -19,6 +19,19 @@ const UA = 'Mozilla/5.0 (compatible; website-builder-check/1.0)';
 const get = async u => { try { const r = await fetch(u, { headers: { 'user-agent': UA }, redirect: 'follow' }); return { status: r.status, text: await r.text(), url: r.url }; } catch (e) { return { status: 0, text: '', url: u }; } };
 const save = (p, text) => { const f = path.join(OUT, p); fs.mkdirSync(path.dirname(f), { recursive: true }); fs.writeFileSync(f, text); };
 const pageFile = pathname => (pathname.endsWith('/') ? pathname + 'index.html' : /\.[a-z0-9]{2,5}$/i.test(pathname) ? pathname : pathname + '/index.html');
+
+// --bots: request one page as each AI crawler and report what it gets back.
+if (args.includes('--bots')) {
+  const bots = ['GPTBot', 'OAI-SearchBot', 'ChatGPT-User', 'ClaudeBot', 'Claude-SearchBot', 'PerplexityBot', 'Google-Extended', 'Bingbot'];
+  let bad = 0;
+  for (const b of bots) {
+    let status = 0; try { status = (await fetch(start, { headers: { 'user-agent': `Mozilla/5.0 (compatible; ${b}/1.0)` }, redirect: 'follow' })).status; } catch {}
+    if (status !== 200) bad++;
+    console.log(`${status === 200 ? 'ok  ' : 'FAIL'}  ${b.padEnd(18)} ${status || 'no answer'}`);
+  }
+  console.log(bad ? `\n${bad} crawler(s) did not get the page. Check the host's or CDN's bot settings.` : '\nEvery AI crawler gets the page.');
+  process.exit(bad ? 1 : 0);
+}
 
 fs.mkdirSync(OUT, { recursive: true });
 for (const f of ['robots.txt', 'llms.txt', 'llms-full.txt']) { const r = await get(`${ORIGIN}/${f}`); if (r.status === 200 && !/<html/i.test(r.text.slice(0, 500))) save(f, r.text); }

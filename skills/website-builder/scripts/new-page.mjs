@@ -1,4 +1,3 @@
-#!/usr/bin/env node
 // new-page.mjs: create a new landing page (and its success page) from the contracts.
 //
 //   node scripts/new-page.mjs <archive> <slug> [--goal <goal>] [--success <success-contract>] [--parent <parent-slug>]

@@ -1,7 +1,6 @@
-#!/usr/bin/env node
 // check-site.mjs: one command that checks every built page for SEO, AI search
 // (GEO/AEO), page speed budget, site structure and copy quality.
-// Usage: node scripts/check-site.mjs [built-html-folder] [--site https://example.com] [--freeform]
+// Usage: node scripts/check-site.mjs [built-html-folder] [--site https://<your-domain>] [--freeform]
 // Works on the HTML output of any stack (dist, out, build, _site, public, or a folder
 // saved by fetch-site.mjs). --freeform turns layout conventions (footer archive links,
 // one goal per page, success pages, breadcrumbs) into suggestions instead of failures.

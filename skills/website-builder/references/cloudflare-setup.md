@@ -9,10 +9,10 @@ Give the person one step at a time and wait for "done". Check each step worked y
    - If it is missing or older: tell the person, "Your computer needs a free tool called Node to build the site. I'll walk you through it."
      1. "Open nodejs.org in your browser."
      2. "Click the big green button that says LTS (Recommended)."
-     3. "Open the file that downloads and click Continue / Next until it says it's finished. Use all the default options."
+     3. "Open the Node installer and click Continue / Next until it says it's finished. Use all the default options."
      4. "Tell me done." Then run `node -v` again to confirm. If the terminal still cannot find it, ask them to quit and reopen Claude Code once.
 2. Create the project folder (for example `~/Websites/<business-name>`) and set up Astro + Tailwind inside it yourself. The person does not need to do anything here.
-3. Install Cloudflare's publishing tool, Wrangler, into the site at a fixed version, so it never downloads anything new when it runs: `npm install --save-dev --save-exact wrangler`. Then add these scripts to `package.json`:
+3. Add Cloudflare's publishing tool, Wrangler, to the site's own tools at a fixed version, so every publish uses exactly the same version: `npm install --save-dev --save-exact wrangler`. Then add these scripts to `package.json`:
    ```json
    "cf:login": "wrangler login",
    "cf:whoami": "wrangler whoami",
@@ -83,4 +83,4 @@ Cloudflare can block AI crawlers by default, which hides the site from ChatGPT, 
 2. Leave **Bot Fight Mode** off unless the person has a spam problem, because it can block good crawlers too.
 3. Turn on **Web Analytics** (free, no cookie banner needed) under Analytics & Logs, and add the snippet it gives you to the site's layout.
 4. Verify from the terminal that AI crawlers get the page:
-   `curl -s -o /dev/null -w "%{http_code}" -A "GPTBot" https://<domain>/` should print 200. Repeat with `ClaudeBot`, `PerplexityBot` and `OAI-SearchBot`.
+   `node scripts/fetch-site.mjs https://<domain>/ --bots` should say every AI crawler gets the page.
