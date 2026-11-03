@@ -58,6 +58,8 @@ You can also type `/website-builder` to start it directly.
 
 ## What this plugin runs, sends and fetches
 
+The full privacy policy is in [PRIVACY.md](PRIVACY.md).
+
 The plugin is one skill (instructions plus five small, readable Node.js scripts). It has no hooks, no MCP servers, no background processes and no telemetry. Nothing is ever sent to AI Foundations.
 
 When you use it, Claude may, with your approval at each step:
