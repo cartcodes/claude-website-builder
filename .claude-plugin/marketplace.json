@@ -6,10 +6,10 @@
   },
   "plugins": [
     {
-      "name": "website-builder",
+      "name": "aif-website-builder",
       "source": "./",
       "description": "Build and grow a lead-generation website for any business with Claude Code: landing pages with one conversion goal each, footer-linked archives chosen for the business, success-page contracts, real keyword and place research, plain copy, full SEO plus AI search, indexing, and free Cloudflare hosting.",
-      "version": "1.1.0"
+      "version": "1.2.0"
     }
   ]
 }

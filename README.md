@@ -1,4 +1,4 @@
-# Website Builder for Claude Code
+# AI Foundations Website Builder for Claude Code
 
 Claude builds and grows a fast website whose pages are made to turn visitors into leads and customers. It works for any kind of business. You answer questions and click a few buttons. Claude does the rest:
 
@@ -30,7 +30,7 @@ mkdir -p ~/.claude/skills && unzip ~/Downloads/website-builder.zip -d ~/.claude/
 **As a plugin** (one command, always the latest version):
 ```
 /plugin marketplace add cartcodes/claude-website-builder
-/plugin install website-builder@ai-foundations
+/plugin install aif-website-builder@ai-foundations
 ```
 
 ## Use it
@@ -45,6 +45,19 @@ Open Claude Code in an empty folder and type:
 - `Set up a routine to add new [guides / events / pages] every week` to automate growth under the same rules.
 
 You can also type `/website-builder` to start it directly.
+
+## What this plugin runs, sends and fetches
+
+The plugin is one skill (instructions plus three small, readable Node.js scripts). It has no hooks, no MCP servers, no background processes and no telemetry. Nothing is ever sent to AI Foundations.
+
+When you use it, Claude may, with your approval at each step:
+- **Run on your computer:** `node` (the three scripts in `scripts/`, which only read and write files in your website folder), `npm` to install Astro, Tailwind and Wrangler into your website folder, `astro build`, and `curl` to check your own live pages.
+- **Connect to Cloudflare** with your own account via `npx wrangler login`, to publish your site to Cloudflare Pages.
+- **Send keyword lists to DataForSEO** (optional, only if you create your own DataForSEO account). Your login lives in a local `.env` file, never in the chat.
+- **Fetch public pages:** Google PageSpeed Insights for your site's URLs, search results and competitor pages for keyword research, and `api.indexnow.org` to tell Bing about new pages (optional).
+- **Read files you choose to provide**, such as a customer export used to find where you really work. It stays on your computer and is never published.
+
+You make the Google Search Console, Bing Webmaster Tools and map-listing changes yourself, following Claude's step-by-step instructions.
 
 ## What's inside
 
