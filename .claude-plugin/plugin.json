@@ -2,7 +2,7 @@
   "name": "aif-website-builder",
   "displayName": "AI Foundations Website Builder",
   "description": "Build and grow a lead-generation website for any business with Claude Code: landing pages with one conversion goal each, footer-linked archives chosen for the business, success-page contracts, real keyword and place research, plain copy, full SEO plus AI search, indexing, and free Cloudflare hosting. Guided interview or freeform on any stack and host.",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "author": {
     "name": "AI Foundations"
   },

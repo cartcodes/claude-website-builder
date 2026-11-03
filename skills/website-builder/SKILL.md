@@ -1,6 +1,6 @@
 ---
 name: website-builder
-description: Build, grow and check a fast lead-generation website for any business, run by Claude Code for a non-technical owner. The site is a set of landing pages, each with one conversion goal and everything important on the first screen, grouped into footer-linked archives chosen for that business (places served, offerings, audiences, comparisons, lead magnets, events, or anything else it gives away or sells). Every page and every success action (booked call, submitted form, file download, copy-and-paste delivery, registration, purchase, quiz result, signup) follows a contract, so new pages can be added safely by a person or a scheduled Claude routine. Includes real keyword research backed by demand and competition data, granular service-area discovery, plain persuasive copy with no AI tells, full SEO plus GEO/AEO (AI search), indexing in Google and Bing, page-speed and quality checks, and free hosting on Cloudflare Pages. Two ways to work: a guided Interview that builds the whole system, or Freeform, which applies the same copy, conversion, SEO and GEO/AEO conventions to whatever the person asks for, on any stack and any host (Next.js, WordPress, Webflow, Shopify, Squarespace, Wix, plain HTML, Vercel, Netlify and others), without pushing back. Use when someone wants a website or landing pages, wants to add any kind of landing page or archive, find keywords or places to target, improve SEO or AI visibility, get indexed, or check their site.
+description: Build, grow and check a fast lead-generation website and lead magnets for any business, run by Claude Code for a non-technical owner. Landing pages with one conversion goal each, grouped into footer-linked archives that fit the business, with success-page contracts for every action (booked call, form, download, copy-paste, registration, purchase). Makes lead magnets that bring buyers: suggests ideas tied to the offer, builds the PDF, phone version and cover images, and writes the posts, comment-to-DM flow, ads and emails. Real keyword research, plain persuasive copy with no AI tells, full SEO and GEO/AEO, indexing and speed checks. Guided interview with free Cloudflare hosting, or Freeform on any stack and host. Use for a website, landing page, lead magnet or freebie, keywords, SEO or AI visibility, indexing, or a site check.
 ---
 
 # Website builder
@@ -23,6 +23,7 @@ Remember the answer in `content/notes.md` (or the project's notes file) so you d
 Follow `references/any-stack.md`. In short:
 - **Their words decide.** Build what they ask, in the order they ask, on the stack, platform and host they name or already have. If they name none, pick something sensible for the job and say what you picked in one sentence. Don't run the interview, don't require contracts or archives, and don't argue with layout or design choices.
 - **The conventions are your defaults, not rules.** Write copy with `references/copywriting.md` (including the AI-tells sweep), shape pages with `references/conversion.md`, and apply `references/technical-seo.md`, `references/geo-aeo.md` and `references/indexing.md` wherever they fit. If a request clearly works against its own goal (two competing buttons, a blocked AI crawler, a page hidden from search), mention it once, in one sentence, then do it their way.
+- **Lead magnets work the same way in Freeform.** "Make me a lead magnet" goes straight to `references/lead-magnets.md` and `scripts/build-magnet.mjs`, for any site or none at all.
 - **Use any other reference when it helps** (keyword research, archives, success pages, contracts), and only when they ask for it or it plainly serves what they asked.
 - **Checks still run** where they can: point `scripts/check-site.mjs --freeform` at the site's built HTML folder, or fetch a live site first with `scripts/fetch-site.mjs`. In freeform, layout conventions show as suggestions, not failures.
 - **Still always:** the "How to work with the person" rules below, no invented facts, no handling of passwords or keys, and asking before anything that costs money, changes a domain or deletes something.
@@ -43,6 +44,7 @@ The site grows by adding landing pages, never by adding menu items. Every page f
 
 ## How to work with the person (always)
 
+- Self-serve: do the thinking yourself and offer short menus of concrete options to pick from (AskUserQuestion), with your recommendation first. Ask open questions only for facts only they know.
 - One step at a time. Plain words. Wait for "done" before the next step.
 - When they must click something, say exactly what the button says and where it is on screen.
 - Never handle passwords, API keys or tokens. Never ask for them in the chat, and never read them from files or the computer. Services that need a login are connected by the person themselves: Cloudflare through its browser login, other tools through their own Claude connectors or CSV exports.
@@ -54,16 +56,18 @@ The site grows by adding landing pages, never by adding menu items. Every page f
 ## Choose the job (Normal interview)
 
 1. **Build a new site.** Every phase, in order.
-2. **Add a landing page** of any kind, in any existing archive. Follow "Adding a page" in `references/contracts.md`.
-3. **Add a new archive** (a new kind of landing page). Follow "Adding an archive" in `references/contracts.md`.
-4. **Find keywords and places, and plan new pages.** Phase 4, then hand back the page plan.
-5. **Check, fix and index an existing site.** Phases 8, 9 and 10.
-6. **Set up a routine** that adds pages on a schedule. See "Routines" in `references/contracts.md`.
+2. **Make a lead magnet** (and, if wanted, its landing page, success page, posts, ads and emails). Follow `references/lead-magnets.md`.
+3. **Add a landing page** of any kind, in any existing archive. Follow "Adding a page" in `references/contracts.md`.
+4. **Add a new archive** (a new kind of landing page). Follow "Adding an archive" in `references/contracts.md`.
+5. **Find keywords and places, and plan new pages.** Phase 4, then hand back the page plan.
+6. **Check, fix and index an existing site.** Phases 8, 9 and 10.
+7. **Set up a routine** that adds pages on a schedule. See "Routines" in `references/contracts.md`.
 
-## Phase 1: What will the pages give away? (always first in the interview)
+## Phase 1: What should I make for you? (always first in the interview)
 
-Follow `references/offers-and-archives.md`:
-- Build the **offer inventory**: everything the business gives away or sells, and the one action each offer asks for.
+Follow `references/offers-and-archives.md`. Keep it self-serve: you do the thinking and offer menus to pick from.
+- Ask what they sell, then **"What lead magnets do you want me to make for you?"** with 3-4 ideas worked out for their business (`references/lead-magnets.md`), then which pages to make.
+- Build the **offer inventory** from their picks: everything the site will offer or give away, and the one action each asks for.
 - Learn the business model, where customers come from, and the social media plan. Every social post that promises something needs a landing page that delivers it.
 - Decide whether places matter at all. Many businesses have no location pages.
 - Choose the archives from the templates. Name them in the business's own words and get the person's okay.
@@ -98,7 +102,7 @@ Follow `references/keyword-research.md`:
 Follow `references/contracts.md`:
 - Create `contracts/archives/<id>.json` for each chosen archive from `assets/contracts/archive-templates/`, with the business's own id, label, path and goal.
 - Copy the success contracts the site needs from `assets/contracts/success/`.
-- Copy `scripts/contracts.mjs`, `scripts/new-page.mjs` and `scripts/check-site.mjs` into the site's `scripts/` folder.
+- Copy `scripts/contracts.mjs`, `scripts/new-page.mjs`, `scripts/check-site.mjs` and `scripts/build-magnet.mjs` into the site's `scripts/` folder.
 - Scaffold every planned page with `node scripts/new-page.mjs`.
 
 ## Phase 6: Build the site
@@ -112,6 +116,10 @@ The rules that matter most:
 - **Archives** list every landing page of their kind. The footer on every page links to every archive.
 - **Each archive has a role.** `search` archives are built to rank and be quoted by AI (keyword gate, full SEO/AEO/GEO). `resource` archives hold things linked from content, social posts and email; their pages focus on showing exactly what the visitor gets (a preview is required) and skip the keyword gate. `both` means a resource that also passed the gate.
 - **Success pages** follow their success contract: deliver what was promised, offer one next step, never indexed.
+
+## Phase 6b: Make the lead magnets
+
+For each lead magnet they ordered, follow `references/lead-magnets.md`: write `lead-magnets/<slug>/magnet.md`, run `node scripts/build-magnet.mjs lead-magnets/<slug> --site public`, show them the PDF and cover, and use the cover as the landing page preview. Write `promo.md` (posts, comment-to-DM flow, ads and follow-up emails) if they want it.
 
 ## Phase 7: Write the copy
 

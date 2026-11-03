@@ -12,7 +12,7 @@
     "/resources/"
   ],
   "itemNoun": "free resource",
-  "purpose": "One landing page per thing given away: guide, checklist, template, prompt, script, calculator, swipe file",
+  "purpose": "One landing page per lead magnet: checklist, cheat sheet, guide, template, worksheet, prompt pack, script, calculator, quiz, sample. Build files with scripts/build-magnet.mjs (references/lead-magnets.md).",
   "role": "resource",
   "roleNote": "search = built to rank and be quoted by AI: passes the keyword gate, full SEO/AEO/GEO. resource = reached from content, social posts or email: shows exactly what the visitor gets, no keyword gate, lighter word count, preview required. both = a resource that also passed the keyword gate.",
   "fitsBusinessModels": [
@@ -109,6 +109,28 @@
       ],
       "help": "file = download, copy = text to copy, open = shown on this page"
     },
+    "magnetKind": {
+      "type": "enum",
+      "values": [
+        "reveal-a-problem",
+        "sample",
+        "one-step"
+      ],
+      "help": "Reveal a problem the paid offer solves, a sample or trial, or one step of the paid process (lead-magnets.md, section 2)"
+    },
+    "format": {
+      "type": "string",
+      "help": "checklist, cheat sheet, guide, worksheet, template, swipe file, prompt pack, calculator, quiz, sample..."
+    },
+    "leadsTo": {
+      "type": "string",
+      "help": "The paid offer this magnet leads to, and the next problem it reveals"
+    },
+    "magnetSource": {
+      "type": "string",
+      "optional": true,
+      "help": "lead-magnets/<slug>/ (source for build-magnet.mjs)"
+    },
     "gated": {
       "type": "boolean",
       "help": "true = ask for an email first and deliver on the success page"
@@ -141,7 +163,7 @@
     },
     "preview": {
       "type": "string",
-      "help": "What they get, shown on the page: an image of the resource, a sample excerpt, or the agenda"
+      "help": "What they get, shown on the page: the cover image from build-magnet.mjs (images/lead-magnets/<slug>-cover.png), a sample excerpt, or the agenda"
     }
   },
   "sections": [

@@ -5,6 +5,7 @@ Claude builds and grows a fast website whose pages are made to turn visitors int
 - **Starts with what you give away.** Claude first lists everything you offer (services, free guides, templates, consultations, events, products), then plans a landing page for each one with a single clear action.
 - **One page, one goal.** Everything important is on the first screen. There's no menu to distract people, and every page is built to get its one action taken.
 - **Archives that fit your business.** Places you serve, services, the people you help, free resources, events: whatever fits you, linked from the footer so visitors, Google and AI assistants can find every page.
+- **Lead magnets made for you.** Claude asks "What lead magnets do you want me to make for you?" and offers ideas built around what you sell, picked to bring buyers rather than freebie hunters. It makes the downloadable PDF, a phone-friendly version and cover images, plus the social posts, comment-to-DM flow, ads and follow-up emails to promote it.
 - **Success pages that deliver.** Booked calls, sent forms, downloads, copy-and-paste resources, registrations, purchases and quiz results each get a proper success page with one next step.
 - **Keyword research with real data.** Every search page targets something people actually search for and that you can win. Places are found at the right level of detail, and only if places matter to you.
 - **Plain, convincing copy** with no "AI voice".
@@ -43,7 +44,8 @@ mkdir -p ~/.claude/skills && unzip ~/Downloads/website-builder.zip -d ~/.claude/
 
 Open Claude Code in an empty folder and type:
 
-- `Build me a website` to start. Claude begins by asking what your pages will give away.
+- `Build me a website` to start. Claude begins by asking what you sell and offering lead magnets and pages to make for you.
+- `Make me a lead magnet` to get a ready-to-download freebie, with its posts, ads and emails.
 - `Add a landing page for [the thing]` to grow the site, for example a new free guide, a new service, a new event or a new area.
 - `Find keywords for new pages` to get a page plan backed by real search data.
 - `Check my site` to run the speed, SEO, AI search, conversion and copy checks.
@@ -54,10 +56,10 @@ You can also type `/website-builder` to start it directly.
 
 ## What this plugin runs, sends and fetches
 
-The plugin is one skill (instructions plus four small, readable Node.js scripts). It has no hooks, no MCP servers, no background processes and no telemetry. Nothing is ever sent to AI Foundations.
+The plugin is one skill (instructions plus five small, readable Node.js scripts). It has no hooks, no MCP servers, no background processes and no telemetry. Nothing is ever sent to AI Foundations.
 
 When you use it, Claude may, with your approval at each step:
-- **Run on your computer:** `node` (the scripts in `scripts/`, which only read and write files in your website folder, except `fetch-site.mjs`, which downloads your own site's public pages so they can be checked), `npm` to install Astro, Tailwind and Wrangler into your website folder, `astro build`, and `curl` to check your own live pages.
+- **Run on your computer:** `node` (the scripts in `scripts/`, which only read and write files in your website folder, except `fetch-site.mjs`, which downloads your own site's public pages so they can be checked, and `build-magnet.mjs`, which uses your installed Chrome or Edge, offline, to print lead magnets as PDF and images), `npm` to install Astro, Tailwind and Wrangler into your website folder, `astro build`, and `curl` to check your own live pages.
 - **Publish through the host you choose**, using that host's own sign-in. By default this is Cloudflare, through Cloudflare's own browser login (Wrangler, installed into your website folder at a fixed version), to publish your site to Cloudflare Pages.
 - **Never handle your passwords or API keys.** Keyword data comes from free CSV exports (Google Keyword Planner, Search Console, Bing Webmaster Tools), or optionally from a paid keyword tool such as DataForSEO, Semrush or Ahrefs that you connect to Claude yourself.
 - **Fetch public pages:** Google PageSpeed Insights for your site's URLs, search results and competitor pages for keyword research, and `api.indexnow.org` to tell Bing about new pages (optional).
@@ -71,7 +73,8 @@ You make the Google Search Console, Bing Webmaster Tools and map-listing changes
 skills/website-builder/
   SKILL.md                         the process Claude follows
   references/
-    offers-and-archives.md         what the pages give away, archive roles, choosing archives
+    offers-and-archives.md         what to make for you, archive roles, choosing archives
+    lead-magnets.md                choosing, building and promoting lead magnets that bring buyers
     conversion.md                  what makes a page convert, and how to measure and improve it
     contracts.md                   page and success-page contracts, adding pages, routines
     site-structure.md              first-screen rule, archives, success pages, footer, build rules
@@ -89,5 +92,6 @@ skills/website-builder/
     contracts.mjs                  turns contracts into build rules, and checks content files
     new-page.mjs                   creates a new page (and its success page) from a contract
     check-site.mjs                 the checker that runs before every publish (any stack)
+    build-magnet.mjs               makes a lead magnet's PDF, phone version and cover images
     fetch-site.mjs                 saves a live site's public pages so the checker can read them
 ```

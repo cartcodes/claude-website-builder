@@ -1,20 +1,21 @@
-# Step one: what will the pages give away? Then choose the archives
+# Step one: what should I make for you? Then choose the archives
 
-Before anything else, find out everything the business can give away or sell, and the one action each thing should get. Every one of those things can become a landing page built to convert that action. Things of the same kind become an archive. This decides the whole site, so do it first and do it carefully. Assume nothing about the business: no trade, no places, no page types.
+The site is a set of landing pages, each built to get one action taken. Each page is something the business offers or gives away. Pages of the same kind become an archive. This decides the whole site, so do it first and do it well. Assume nothing: no trade, no places, no page types.
 
-## 1. The offer inventory (the first part of the interview)
+**This is self-serve.** The person orders and you make it. Don't quiz them with "What are you giving away?" Do the thinking yourself, then put a short menu of concrete options in front of them to pick from. Use the AskUserQuestion tool for every menu (in plain words if that tool isn't available), with your recommended option first.
 
-Ask one question at a time, and write each answer as a row in `content/offers.md`:
+## 1. The order (the first part of the interview)
 
-1. "What's the main thing you want people to do? Book a call, request a quote, buy, sign up, visit, apply?"
-2. "What do you already give away for free, or could easily? Guides, checklists, templates, prompts, scripts, calculators, price lists, videos, a quiz, a free assessment or consultation, a trial, a sample?"
-3. "Do you run webinars, workshops, classes or events?"
-4. "Which offerings make you the most money, or do you most want more of?"
-5. "Do you serve specific places, or anyone anywhere?" (If anywhere, skip place pages entirely.)
-6. "Do you serve specific kinds of customers, industries or situations?"
-7. "Who do customers compare you with?"
-8. "Where do people find you today, and where do you post? Search, maps, Instagram, TikTok, YouTube, LinkedIn, Facebook groups, email, ads, referrals, partners?"
-9. "When you post on social media or send email, what do you ask people to do?"
+Read `about.md`, `voice.md`, any existing site and `content/offers.md` first, and skip anything they already answer. Then:
+
+1. **"What do you sell, and what would you most like more of?"** One open question. Follow up only if you can't tell what a customer actually buys.
+2. **"What's the one thing you want visitors to do?"** Give a menu of 3-4 actions that fit what they sell: book a call, request a quote, buy, sign up, visit, apply.
+3. **"What lead magnets do you want me to make for you?"** Multi-select. Offer the 3-4 best ideas for *this* business, each with a name and a one-line reason it brings buyers. Work them out with `lead-magnets.md` (section 2). They can pick several, none, or type their own. Existing freebies they already have count too, so ask in one line whether there are any.
+4. **"Which pages should I make so people can find you?"** Multi-select. Suggest only the kinds that fit what you've learned: one page per service or product, the places they serve, the kinds of customers they help, comparisons with alternatives, events or classes. Include "Not sure, you decide" and treat it as a request for your recommendation.
+5. **"Where do your customers find you, and where do you post?"** Multi-select: Google search, Google Maps, Instagram, TikTok, YouTube, LinkedIn, Facebook, email, ads, referrals. Every post, email or ad that promises something needs a landing page that delivers it.
+6. If they picked places: **"Which areas do you serve?"** Then discover the right level of detail yourself (`keyword-research.md`). If they serve anyone anywhere, skip place pages entirely.
+
+Fill in the inventory yourself from their answers, and show it back as a plain list to confirm.
 
 For each offer, record:
 
